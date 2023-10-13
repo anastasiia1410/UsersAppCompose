@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">UsersAppCompose</string>
+    <string name="gender">Gender: %1s</string>
+    <string name="name">Name: %1s %1s %1s</string>
+    <string name="address">Address: %1s, %1s, %1s, %1s</string>
+    <string name="mail">Mail: %1s</string>
+</resources>
