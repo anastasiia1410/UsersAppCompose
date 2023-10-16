@@ -1,6 +1,6 @@
-package com.example.usersappcompose.screens.entity
+package com.example.usersappcompose.ui.entity
 
-import com.example.usersappcompose.screens.detail.DetailState
+import com.example.usersappcompose.ui.screens.detail.DetailState
 
 
 data class User(

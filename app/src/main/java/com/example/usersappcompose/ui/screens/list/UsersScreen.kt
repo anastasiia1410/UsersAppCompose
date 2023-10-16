@@ -1,4 +1,4 @@
-package com.example.usersappcompose.screens.list
+package com.example.usersappcompose.ui.screens.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -16,7 +16,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.example.usersappcompose.screens.entity.User
+import com.example.usersappcompose.ui.screens.main.Screen
+import com.example.usersappcompose.ui.entity.User
 import com.example.usersappcompose.ui.theme.UsersAppComposeTheme
 
 @Composable
@@ -35,7 +36,7 @@ fun UsersListScreen(
                 val user = pager[index]
                 user?.let {
                     ListItem(user = it, onUserClick = {
-                        navController.navigate(Screen.MyDetailScreen.route + "/${user.uuid}")
+                        navController.navigate(Screen.AddUserToContactScreen.route + "/${user.uuid}")
                     })
                 }
             }
@@ -58,9 +59,4 @@ fun ListItem(user: User, onUserClick: ((uuid: String) -> Unit)) {
             )
         }
     }
-}
-
-sealed class Screen(val route: String) {
-    object MyListScreen : Screen("my_list_screen")
-    object MyDetailScreen : Screen("my_detail_screen")
 }

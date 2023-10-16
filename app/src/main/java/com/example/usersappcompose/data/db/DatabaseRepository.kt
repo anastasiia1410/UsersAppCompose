@@ -1,6 +1,6 @@
 package com.example.usersappcompose.data.db
 
-import com.example.usersappcompose.screens.entity.User
+import com.example.usersappcompose.ui.entity.User
 
 interface DatabaseRepository {
     suspend fun insert(users: List<User>)

@@ -1,4 +1,4 @@
-package com.example.usersappcompose.screens.list
+package com.example.usersappcompose.ui.screens.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,7 +8,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.usersappcompose.data.UsersPageSource
 import com.example.usersappcompose.data.network.Api.Companion.DEFAULT_PAGE_SIZE
-import com.example.usersappcompose.screens.entity.User
+import com.example.usersappcompose.ui.entity.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

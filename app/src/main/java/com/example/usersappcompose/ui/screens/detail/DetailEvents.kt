@@ -1,6 +1,6 @@
-package com.example.usersappcompose.screens.detail
+package com.example.usersappcompose.ui.screens.detail
 
-import com.example.usersappcompose.screens.entity.User
+import com.example.usersappcompose.ui.entity.User
 
 
 sealed class DetailEvents {

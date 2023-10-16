@@ -1,4 +1,4 @@
-package com.example.usersappcompose.screens.detail
+package com.example.usersappcompose.ui.screens.detail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.usersappcompose.R
 import com.example.usersappcompose.ui.theme.UsersAppComposeTheme
@@ -19,7 +19,8 @@ import com.example.usersappcompose.ui.theme.UsersAppComposeTheme
 @Composable
 fun UserDetailScreen(viewModel: UserDetailViewModel) {
     UsersAppComposeTheme {
-        val user = viewModel.state.collectAsState().value.user
+        val state by viewModel.state.collectAsState()
+        val user = state.user
         if (user != null) {
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -28,11 +29,11 @@ fun UserDetailScreen(viewModel: UserDetailViewModel) {
             ) {
 
                 with(user) {
-                    AsyncImage(model = picture, contentDescription = null, Modifier.padding(16.dp))
+                    AsyncImage(model = picture, contentDescription = null)
                     Text(text = stringResource(id = R.string.gender, gender), Modifier.padding(16.dp))
-                    Text(text = stringResource(id = R.string.name, title, firstName, lastName))
-                    Text(stringResource(R.string.address, city, state, country, postCode))
-                    Text(text = stringResource(id = R.string.mail, email))
+                    Text(text = stringResource(id = R.string.name, title, firstName, lastName), Modifier.padding(16.dp))
+                    Text(stringResource(R.string.address, city, this.state, country, postCode), Modifier.padding(16.dp))
+                    Text(text = stringResource(id = R.string.mail, email), Modifier.padding(16.dp))
                 }
             }
         }

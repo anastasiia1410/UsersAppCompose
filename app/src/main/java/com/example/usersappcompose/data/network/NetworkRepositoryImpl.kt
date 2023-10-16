@@ -1,7 +1,7 @@
 package com.example.usersappcompose.data.network
 
 import com.example.usersappcompose.data.network.entity.toUser
-import com.example.usersappcompose.screens.entity.User
+import com.example.usersappcompose.ui.entity.User
 import javax.inject.Inject
 
 class NetworkRepositoryImpl @Inject constructor(private val api: Api) : NetworkRepository {

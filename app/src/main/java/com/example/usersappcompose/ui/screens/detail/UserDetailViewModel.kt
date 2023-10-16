@@ -1,10 +1,11 @@
-package com.example.usersappcompose.screens.detail
+package com.example.usersappcompose.ui.screens.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.usersappcompose.core.BaseViewModel
 import com.example.usersappcompose.data.db.DatabaseRepository
-import com.example.usersappcompose.screens.entity.User
+import com.example.usersappcompose.ui.screens.detail.use_case.GetDetailUserUseCase
+import com.example.usersappcompose.ui.entity.User
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

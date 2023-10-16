@@ -2,7 +2,7 @@ package com.example.usersappcompose.data.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.usersappcompose.screens.entity.User
+import com.example.usersappcompose.ui.entity.User
 
 @Entity(tableName = "User")
 data class UserDatabase(
@@ -32,7 +32,7 @@ fun User.toUserDatabase(): UserDatabase {
         postCode = postCode,
         email = email,
         uuid = uuid,
-        picture = picture
+        picture = picture,
     )
 }
 
@@ -48,7 +48,7 @@ fun UserDatabase.toUser(): User {
         postCode = postCode,
         email = email,
         uuid = uuid,
-        picture = picture
+        picture = picture,
     )
 }
 

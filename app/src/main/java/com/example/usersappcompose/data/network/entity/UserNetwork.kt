@@ -1,6 +1,6 @@
 package com.example.usersappcompose.data.network.entity
 
-import com.example.usersappcompose.screens.entity.User
+import com.example.usersappcompose.ui.entity.User
 import com.google.gson.annotations.SerializedName
 
 data class UserNetwork(
@@ -30,7 +30,7 @@ fun UserNetwork.toUser(): User {
         postCode = location.postCode,
         email = email,
         uuid = login.uuid,
-        picture = picture.largePicture
+        picture = picture.largePicture,
     )
 }
 

@@ -1,4 +1,4 @@
-package com.example.usersappcompose.screens.detail
+package com.example.usersappcompose.ui.screens.detail
 
 import com.example.usersappcompose.core.Reducer
 

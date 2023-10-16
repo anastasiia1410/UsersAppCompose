@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import com.example.usersappcompose.data.db.DatabaseRepository
 import com.example.usersappcompose.data.network.Api
 import com.example.usersappcompose.data.network.entity.toUser
-import com.example.usersappcompose.screens.entity.User
+import com.example.usersappcompose.ui.entity.User
 import javax.inject.Inject
 
 class UsersPageSource @Inject constructor(
@@ -35,8 +35,16 @@ class UsersPageSource @Inject constructor(
             return if (params.key != 1) {
                 LoadResult.Page(emptyList(), null, null)
             } else {
-                val usersFromDb = databaseRepository.getUsers()
-                LoadResult.Page(usersFromDb, null, null)
+                val result = kotlin.runCatching {
+                    databaseRepository.getUsers()
+                }.onSuccess { userList ->
+                    LoadResult.Page(userList, null, null)
+
+                }.onFailure { throwable ->
+                    throw IllegalArgumentException(throwable.message)
+                }
+                val users = result.getOrNull() ?: emptyList()
+                LoadResult.Page(users, null, null)
             }
         }
     }
