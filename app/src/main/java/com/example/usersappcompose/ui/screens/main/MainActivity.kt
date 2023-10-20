@@ -1,24 +1,26 @@
 package com.example.usersappcompose.ui.screens.main
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.usersappcompose.ui.screens.add_contact.AddContactScreen
 import com.example.usersappcompose.ui.screens.create_user.CreateUserScreen
 import com.example.usersappcompose.ui.screens.detail.UserDetailScreen
 import com.example.usersappcompose.ui.screens.detail.UserDetailViewModel
+import com.example.usersappcompose.ui.screens.edit_user.EditUserScreen
 import com.example.usersappcompose.ui.screens.list.UsersListScreen
 import com.example.usersappcompose.ui.theme.UsersAppComposeTheme
 import dagger.hilt.EntryPoint
@@ -36,8 +38,10 @@ class MainActivity : ComponentActivity() {
         fun userDetailViewModelFactory(): UserDetailViewModel.Factory
     }
 
+    @SuppressLint("StateFlowValueCalledInComposition")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             UsersAppComposeTheme {
                 UsersApp()
@@ -57,9 +61,10 @@ fun UsersApp(modifier: Modifier = Modifier) {
 
 @Composable
 fun MainNavHost(navController: NavHostController, viewModel: MainViewModel = hiltViewModel()) {
+    val startScreen = viewModel.startScreenFlow.collectAsState()
     NavHost(
         navController = navController,
-        startDestination = getStartScreen(viewModel)
+        startDestination = startScreen.value
     ) {
         composable(route = Screen.CreateUserScreen.route) {
             CreateUserScreen(navController = navController)
@@ -67,21 +72,20 @@ fun MainNavHost(navController: NavHostController, viewModel: MainViewModel = hil
         composable(route = Screen.UsersContactScreen.route) {
             UsersListScreen(navController = navController)
         }
-        composable(route = Screen.AddUserToContactScreen.route + "/{uuid}") { backStackEntry ->
+        composable(route = Screen.UserDetailScreen.route + "/{uuid}") { backStackEntry ->
             val uuid = backStackEntry.arguments?.getString("uuid")
             uuid?.let {
                 UserDetailScreen(noteDetailViewModel(uuid = uuid))
             }
         }
+        composable(route = Screen.EditUserScreen.route) {
+            EditUserScreen(navController = navController)
+        }
+        composable(route = Screen.AddContactScreen.route) {
+            AddContactScreen(navController = navController)
+        }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    UsersApp(Modifier.fillMaxSize())
-}
-
 
 @Composable
 fun noteDetailViewModel(uuid: String): UserDetailViewModel {
@@ -90,16 +94,18 @@ fun noteDetailViewModel(uuid: String): UserDetailViewModel {
         MainActivity.ViewModelFactoryProvider::class.java
     ).userDetailViewModelFactory()
 
-    return viewModel(factory = UserDetailViewModel.provideUserDetailViewModelFactory(factory, uuid))
+    return viewModel(
+        factory = UserDetailViewModel.provideUserDetailViewModelFactory(
+            factory,
+            uuid
+        )
+    )
 }
 
-fun getStartScreen(viewModel: MainViewModel): String {
-    return if (viewModel.currentUserFlow.value == null) {
-        Screen.CreateUserScreen.route
-    } else {
-        Screen.UsersContactScreen.route
-    }
-}
+
+
+
+
 
 
 

@@ -1,10 +1,7 @@
 package com.example.usersappcompose.di
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.room.Room
-import com.example.usersappcompose.core.preference.AppPreference
-import com.example.usersappcompose.core.preference.AppPreferenceImpl
 import com.example.usersappcompose.data.UsersPageSource
 import com.example.usersappcompose.data.db.AppDatabase
 import com.example.usersappcompose.data.db.DatabaseRepository
@@ -27,16 +24,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-private const val APP_PREFERENCE_NAME = "app.preferences"
-
 @InstallIn(SingletonComponent::class)
 @Module
 class DataModule {
-
-    @Provides
-    fun provideSharedPref(@ApplicationContext context: Context): SharedPreferences {
-        return context.getSharedPreferences(APP_PREFERENCE_NAME, Context.MODE_PRIVATE)
-    }
 
     @Provides
     fun provideGson(): Gson {
@@ -75,18 +65,14 @@ class DataModule {
     }
 
     @Provides
-    fun provideUsersPageSource(api: Api, databaseRepository: DatabaseRepository): UsersPageSource {
-        return UsersPageSource(api, databaseRepository)
+    fun provideUsersPageSource(api: Api): UsersPageSource {
+        return UsersPageSource(api)
     }
 }
 
 @InstallIn(SingletonComponent::class)
 @Module
 interface Binds {
-
-    @Binds
-    @Singleton
-    fun bindSharedPref(impl: AppPreferenceImpl): AppPreference
 
     @Binds
     @Singleton

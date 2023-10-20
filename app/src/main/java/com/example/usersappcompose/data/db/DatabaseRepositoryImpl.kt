@@ -7,9 +7,16 @@ import javax.inject.Inject
 
 class DatabaseRepositoryImpl @Inject constructor(private val userDao: UserDao) :
     DatabaseRepository {
+    override suspend fun insertUser(user: User) {
+        userDao.insertCurrentUser(user.toUserDatabase())
+    }
     override suspend fun insert(users: List<User>) {
         userDao.insert(users.map { it.toUserDatabase() })
     }
+
+   override suspend fun getCurrentUser() : User?{
+       return userDao.getCurrentUser()?.toUser()
+   }
 
     override suspend fun getUsers(): List<User> {
         return userDao.getUsers().map { it.toUser() }
@@ -19,7 +26,7 @@ class DatabaseRepositoryImpl @Inject constructor(private val userDao: UserDao) :
         return userDao.getUserById(uuid).toUser()
     }
 
-    override suspend fun clearTable() {
-        userDao.clearTable()
+    override suspend fun updateUserInfo(user: User) {
+        userDao.updateUser(user.toUserDatabase())
     }
 }

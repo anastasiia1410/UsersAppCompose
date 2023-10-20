@@ -1,6 +1,6 @@
 package com.example.usersappcompose.ui.screens.detail.use_case
 
-import com.example.network_db.core.UseCase
+import com.example.usersappcompose.core.UseCase
 import com.example.usersappcompose.data.db.DatabaseRepository
 import com.example.usersappcompose.ui.screens.detail.DetailEvents
 import com.example.usersappcompose.ui.screens.detail.DetailState
@@ -14,14 +14,12 @@ class GetDetailUserUseCase @Inject constructor(private val databaseRepository: D
 
     override suspend fun invoke(event: DetailEvents, state: DetailState): DetailEvents {
         return ((event as? DetailEvents.GetUser)?.let {
-            kotlin.runCatching {
-                databaseRepository.getUserById(event.uuid)
-            }.onSuccess { user ->
+            try {
+                val user = databaseRepository.getUserById(event.uuid)
                 return DetailEvents.ShowUser(user)
-            }.onFailure { throwable ->
-                return DetailEvents.Error(throwable.message!!)
+            } catch (t: Throwable) {
+                return DetailEvents.Error(t.message!!)
             }
-            return DetailEvents.Error("An unexpected error occurred")
         } ?: DetailEvents.Error("Wrong event type : $event"))
     }
 }

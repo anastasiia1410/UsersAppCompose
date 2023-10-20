@@ -8,47 +8,35 @@ import com.example.usersappcompose.ui.entity.User
 data class UserDatabase(
     @PrimaryKey(false)
     val uuid: String,
-    val gender: String,
-    val title: String,
     val firstName: String,
     val lastName: String,
-    val city: String,
-    val state: String,
-    val country: String,
-    val postCode: String,
+    val phoneNumber : String?,
     val email: String,
     val picture: String,
+    val category: String?,
 )
 
 fun User.toUserDatabase(): UserDatabase {
     return UserDatabase(
-        gender = gender,
-        title = title,
         firstName = firstName,
         lastName = lastName,
-        city = city,
-        state = state,
-        country = country,
-        postCode = postCode,
+        phoneNumber = phoneNumber,
         email = email,
         uuid = uuid,
         picture = picture,
+        category = category
     )
 }
 
 fun UserDatabase.toUser(): User {
     return User(
-        gender = gender,
-        title = title,
         firstName = firstName,
         lastName = lastName,
-        city = city,
-        state = state,
-        country = country,
-        postCode = postCode,
+        phoneNumber = phoneNumber,
         email = email,
         uuid = uuid,
         picture = picture,
+        category = category
     )
 }
 

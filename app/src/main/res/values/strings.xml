@@ -1,7 +1,23 @@
 <resources>
     <string name="app_name">UsersAppCompose</string>
-    <string name="gender">Gender: %1s</string>
-    <string name="name">Name: %1s %1s %1s</string>
-    <string name="address">Address: %1s, %1s, %1s, %1s</string>
+    <string name="category">Category: %1s</string>
+    <string name="name">Name: %1s %1s</string>
     <string name="mail">Mail: %1s</string>
+    <string name="edit_profile">Editing profile:</string>
+    <string name="create_profile">Create your profile:</string>
+    <string name="save">Save</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="phone_number">Phone number</string>
+    <string name="email">Email</string>
+    <string name="select_image">Select image</string>
+    <string name="update">Update</string>
+    <string name="sort_by">Sort by: </string>
+    <string name="all">All</string>
+    <string name="friends">Friends</string>
+    <string name="family">Family</string>
+    <string name="work">Work</string>
+    <string name="choose_user_category">Choose user category</string>
+    <string name="search">Search</string>
+    <string name="create_user_screen">create_user_screen</string>
 </resources>

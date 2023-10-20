@@ -4,12 +4,8 @@ import com.example.usersappcompose.ui.entity.User
 import com.google.gson.annotations.SerializedName
 
 data class UserNetwork(
-    @SerializedName("gender")
-    val gender: String,
     @SerializedName("name")
     val name: NameNetwork,
-    @SerializedName("location")
-    val location: LocationNetwork,
     @SerializedName("email")
     val email: String,
     @SerializedName("login")
@@ -20,38 +16,21 @@ data class UserNetwork(
 
 fun UserNetwork.toUser(): User {
     return User(
-        gender = gender,
-        title = name.title,
         firstName = name.firstName,
         lastName = name.lastName,
-        city = location.city,
-        state = location.state,
-        country = location.country,
-        postCode = location.postCode,
         email = email,
         uuid = login.uuid,
         picture = picture.largePicture,
+        category = null,
+        phoneNumber = null
     )
 }
 
 data class NameNetwork(
-    @SerializedName("title")
-    val title: String,
     @SerializedName("first")
     val firstName: String,
     @SerializedName("last")
     val lastName: String,
-)
-
-data class LocationNetwork(
-    @SerializedName("city")
-    val city: String,
-    @SerializedName("state")
-    val state: String,
-    @SerializedName("country")
-    val country: String,
-    @SerializedName("postcode")
-    val postCode: String,
 )
 
 data class LoginNetwork(@SerializedName("uuid") val uuid: String)
