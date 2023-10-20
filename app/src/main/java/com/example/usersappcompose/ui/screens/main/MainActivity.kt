@@ -5,12 +5,13 @@ import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -28,9 +29,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ActivityComponent
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val viewModel by viewModels<MainViewModel>()
 
     @EntryPoint
     @InstallIn(ActivityComponent::class)
@@ -42,29 +45,37 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContent {
-            UsersAppComposeTheme {
-                UsersApp()
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.isLoading.collect { isLoading ->
+                    if (isLoading) {
+                        val startScreen = viewModel.startScreenFlow.value
+                        setContent {
+                            UsersAppComposeTheme {
+                                UsersApp(startScreen = startScreen)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun UsersApp(modifier: Modifier = Modifier) {
-    Surface(modifier) {
+fun UsersApp(startScreen: String) {
+    Surface {
         val navController = rememberNavController()
-        MainNavHost(navController = navController)
+        MainNavHost(navController = navController, startScreen = startScreen)
     }
 }
 
 
 @Composable
-fun MainNavHost(navController: NavHostController, viewModel: MainViewModel = hiltViewModel()) {
-    val startScreen = viewModel.startScreenFlow.collectAsState()
+fun MainNavHost(navController: NavHostController, startScreen: String) {
     NavHost(
         navController = navController,
-        startDestination = startScreen.value
+        startDestination = startScreen
     ) {
         composable(route = Screen.CreateUserScreen.route) {
             CreateUserScreen(navController = navController)

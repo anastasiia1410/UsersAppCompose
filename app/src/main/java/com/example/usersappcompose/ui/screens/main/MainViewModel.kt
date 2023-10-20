@@ -19,6 +19,10 @@ class MainViewModel @Inject constructor(private val databaseRepository: Database
     val startScreenFlow: StateFlow<String>
         get() = _startScreenFlow.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading : StateFlow<Boolean>
+        get() = _isLoading
+
     init {
         checkCurrentUser()
     }
@@ -32,6 +36,7 @@ class MainViewModel @Inject constructor(private val databaseRepository: Database
                 } else {
                     _startScreenFlow.value = Screen.UsersContactScreen.route
                 }
+                _isLoading.value = true
             }
         }
     }
