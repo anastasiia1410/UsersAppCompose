@@ -2,34 +2,38 @@ package com.example.usersappcompose.ui.screens.create_user.use_case
 
 import com.example.usersappcompose.core.UseCase
 import com.example.usersappcompose.data.db.DatabaseRepository
+import com.example.usersappcompose.ui.entity.CURRENT_USER_ID
 import com.example.usersappcompose.ui.entity.User
-import com.example.usersappcompose.ui.screens.create_user.CurrentUserEvent
-import com.example.usersappcompose.ui.screens.create_user.CurrentUserSate
+import com.example.usersappcompose.ui.screens.create_user.CreateUserEvent
+import com.example.usersappcompose.ui.screens.create_user.CreateUserSate
+import java.sql.SQLException
 import javax.inject.Inject
 
 class SaveCurrentUserUseCase @Inject constructor(private val databaseRepository: DatabaseRepository) :
-    UseCase<CurrentUserEvent, CurrentUserSate> {
-    override fun canHandle(event: CurrentUserEvent): Boolean {
-        return event is CurrentUserEvent.AddUser
+    UseCase<CreateUserEvent, CreateUserSate> {
+    override fun canHandle(event: CreateUserEvent): Boolean {
+        return event is CreateUserEvent.ReceiveUser
     }
 
-    override suspend fun invoke(event: CurrentUserEvent, state: CurrentUserSate): CurrentUserEvent {
-        return ((event as? CurrentUserEvent.AddUser)?.let {
+    override suspend fun invoke(event: CreateUserEvent, state: CreateUserSate): CreateUserEvent {
+        return ((event as? CreateUserEvent.ReceiveUser)?.let {
             val user = User(
-                uuid = "1",
-                firstName = event.firstName,
-                lastName = event.lastName,
-                phoneNumber = event.phoneNumber,
-                email = event.email,
-                picture = event.picture,
+                uuid = CURRENT_USER_ID,
+                firstName = state.firstName,
+                lastName = state.lastName,
+                phoneNumber = state.phoneNumber,
+                email = state.email,
+                picture = state.picture,
                 category = null
             )
-            databaseRepository.insertUser(user)
+            try {
+                databaseRepository.insertUser(user)
+                return CreateUserEvent.None
+            } catch (e: SQLException) {
+                return CreateUserEvent.Error("error $e")
+            }
 
-            return CurrentUserEvent.SaveCurrentUser(user)
-
-
-        } ?: CurrentUserEvent.Error("Wrong event type : $event"))
+        } ?: CreateUserEvent.Error("Wrong event type : $event"))
 
     }
 }

@@ -2,22 +2,22 @@ package com.example.usersappcompose.ui.screens.edit_user
 
 import com.example.usersappcompose.core.BaseViewModel
 import com.example.usersappcompose.data.db.DatabaseRepository
-import com.example.usersappcompose.ui.entity.User
-import com.example.usersappcompose.ui.screens.edit_user.use_case.RefactorUserUseCase
-import com.example.usersappcompose.ui.screens.edit_user.use_case.ShowUserUseCase
+import com.example.usersappcompose.ui.screens.edit_user.use_case.GetUserUseCase
+import com.example.usersappcompose.ui.screens.edit_user.use_case.UpdateUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class EditUserViewModel @Inject constructor(databaseRepository: DatabaseRepository) :
     BaseViewModel<EditEvent, EditState>(
-        useCases = listOf(ShowUserUseCase(databaseRepository), RefactorUserUseCase(databaseRepository)),
+        useCases = listOf(
+            GetUserUseCase(databaseRepository),
+            UpdateUserUseCase(databaseRepository)
+        ),
         reducer = EditReducer(),
-        initialState = User.initialEditUser()
+        initialState = EditState("", "", "", "", "")
     ) {
 
-    val isLoaded = MutableStateFlow(false)
 
     init {
         showUserInfo()
@@ -25,10 +25,30 @@ class EditUserViewModel @Inject constructor(databaseRepository: DatabaseReposito
 
     private fun showUserInfo() {
         handleEvent(EditEvent.GetSavedUser)
-        isLoaded.value = true
+
     }
 
-    fun saveEditUser(user: User) {
-        handleEvent(EditEvent.RefactorSavedUser(user))
+    fun updateUser() {
+        handleEvent(EditEvent.SaveUpdateUser)
+    }
+
+    fun changeFirstName(text: String) {
+        handleEvent(EditEvent.ChangeFirstName(text))
+    }
+
+    fun changeLastName(text: String) {
+        handleEvent(EditEvent.ChangeLastName(text))
+    }
+
+    fun changePhoneNumber(text: String) {
+        handleEvent(EditEvent.ChangePhoneNumber(text))
+    }
+
+    fun changeEmail(text: String) {
+        handleEvent(EditEvent.ChangeEmail(text))
+    }
+
+    fun changePicture(text: String) {
+        handleEvent(EditEvent.ChangePicture(text))
     }
 }

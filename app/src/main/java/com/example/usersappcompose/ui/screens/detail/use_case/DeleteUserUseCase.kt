@@ -4,24 +4,23 @@ import com.example.usersappcompose.core.UseCase
 import com.example.usersappcompose.data.db.DatabaseRepository
 import com.example.usersappcompose.ui.screens.detail.DetailEvent
 import com.example.usersappcompose.ui.screens.detail.DetailState
+import java.sql.SQLException
 import javax.inject.Inject
 
-class GetDetailUserUseCase @Inject constructor(private val databaseRepository: DatabaseRepository) :
+class DeleteUserUseCase @Inject constructor(private val databaseRepository: DatabaseRepository) :
     UseCase<DetailEvent, DetailState> {
     override fun canHandle(event: DetailEvent): Boolean {
-        return event is DetailEvent.GetUser
+        return event is DetailEvent.DeleteUser
     }
 
     override suspend fun invoke(event: DetailEvent, state: DetailState): DetailEvent {
-        return ((event as? DetailEvent.GetUser)?.let {
+        return ((event as? DetailEvent.DeleteUser))?.let {
             try {
-                val user = databaseRepository.getUserById(event.uuid)
-                user?.let {
-                    return DetailEvent.ShowUser(user)
-                }
-            } catch (e: NullPointerException) {
-                return DetailEvent.Error("user isn`t found")
+                databaseRepository.deleteUser(event.user)
+                return DetailEvent.None
+            } catch (e: SQLException) {
+                return DetailEvent.Error("error $e")
             }
-        } ?: DetailEvent.Error("Wrong event type : $event"))
+        } ?: DetailEvent.Error("wrong event type: $event")
     }
 }

@@ -4,18 +4,23 @@ import com.example.usersappcompose.core.UseCase
 import com.example.usersappcompose.data.db.DatabaseRepository
 import com.example.usersappcompose.ui.screens.add_contact.AddContactEvent
 import com.example.usersappcompose.ui.screens.add_contact.AddContactState
+import java.sql.SQLException
 
 class SaveToDbUseCase(val databaseRepository: DatabaseRepository) :
     UseCase<AddContactEvent, AddContactState> {
     override fun canHandle(event: AddContactEvent): Boolean {
-        return event is AddContactEvent.PrepareUserToSave
+        return event is AddContactEvent.SaveUserToContact
     }
 
     override suspend fun invoke(event: AddContactEvent, state: AddContactState): AddContactEvent {
-        return ((event) as? AddContactEvent.PrepareUserToSave)?.let {
-            databaseRepository.insertUser(event.user)
-            return AddContactEvent.SaveUserToContact(event.user)
+        return ((event) as? AddContactEvent.SaveUserToContact)?.let {
+            try {
+                databaseRepository.insertUser(event.user)
+                return AddContactEvent.MoveToContactsScreen
 
+            } catch (e: SQLException) {
+                return AddContactEvent.Error("error $e")
+            }
         } ?: AddContactEvent.Error("wrong event type: $event")
     }
 }

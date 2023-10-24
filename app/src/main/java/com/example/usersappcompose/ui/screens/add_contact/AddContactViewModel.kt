@@ -9,6 +9,7 @@ import com.example.usersappcompose.core.BaseViewModel
 import com.example.usersappcompose.data.UsersPageSource
 import com.example.usersappcompose.data.db.DatabaseRepository
 import com.example.usersappcompose.data.network.Api
+import com.example.usersappcompose.ui.entity.Category
 import com.example.usersappcompose.ui.entity.User
 import com.example.usersappcompose.ui.screens.add_contact.use_case.SaveToDbUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +26,7 @@ class AddContactViewModel @Inject constructor(
     BaseViewModel<AddContactEvent, AddContactState>(
         useCases = listOf(SaveToDbUseCase(databaseRepository)),
         reducer = AddContactReducer(),
-        initialState = User.initialSaveContact()
+        initialState = AddContactState(category = "")
     ) {
 
     val pager: StateFlow<PagingData<User>> = Pager(
@@ -41,7 +42,8 @@ class AddContactViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
 
-    fun saveContact(user: User) {
-        handleEvent(AddContactEvent.PrepareUserToSave(user))
+    fun saveContact(user: User, category: Category) {
+        handleEvent(AddContactEvent.SaveUserToContact(user.copy(category = category.name)))
     }
+
 }

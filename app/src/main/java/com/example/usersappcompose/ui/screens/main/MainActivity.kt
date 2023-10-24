@@ -86,7 +86,7 @@ fun MainNavHost(navController: NavHostController, startScreen: String) {
         composable(route = Screen.UserDetailScreen.route + "/{uuid}") { backStackEntry ->
             val uuid = backStackEntry.arguments?.getString("uuid")
             uuid?.let {
-                UserDetailScreen(noteDetailViewModel(uuid = uuid))
+                UserDetailScreen(noteDetailViewModel(uuid = uuid), navController)
             }
         }
         composable(route = Screen.EditUserScreen.route) {
@@ -97,6 +97,7 @@ fun MainNavHost(navController: NavHostController, startScreen: String) {
         }
     }
 }
+
 
 @Composable
 fun noteDetailViewModel(uuid: String): UserDetailViewModel {

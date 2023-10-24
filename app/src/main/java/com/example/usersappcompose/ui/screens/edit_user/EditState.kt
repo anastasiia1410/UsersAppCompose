@@ -1,5 +1,9 @@
 package com.example.usersappcompose.ui.screens.edit_user
 
-import com.example.usersappcompose.ui.entity.User
-
-data class EditState(val user : User?)
+data class EditState(
+    val firstName: String,
+    val lastName: String,
+    val phoneNumber: String,
+    val email: String,
+    val picture: String,
+)

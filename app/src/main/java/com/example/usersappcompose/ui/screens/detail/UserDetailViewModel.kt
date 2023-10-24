@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.usersappcompose.core.BaseViewModel
 import com.example.usersappcompose.data.db.DatabaseRepository
-import com.example.usersappcompose.ui.screens.detail.use_case.GetDetailUserUseCase
 import com.example.usersappcompose.ui.entity.User
+import com.example.usersappcompose.ui.screens.detail.use_case.DeleteUserUseCase
+import com.example.usersappcompose.ui.screens.detail.use_case.GetDetailUserUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -15,8 +16,11 @@ class UserDetailViewModel @AssistedInject constructor(
     databaseRepository: DatabaseRepository,
     @Assisted uuid: String,
 ) :
-    BaseViewModel<DetailEvents, DetailState>(
-        useCases = listOf(GetDetailUserUseCase(databaseRepository)),
+    BaseViewModel<DetailEvent, DetailState>(
+        useCases = listOf(
+            GetDetailUserUseCase(databaseRepository),
+            DeleteUserUseCase(databaseRepository)
+        ),
         reducer = DetailReducer(),
         initialState = User.initialUser()
     ) {
@@ -27,7 +31,11 @@ class UserDetailViewModel @AssistedInject constructor(
 
 
     private fun getUser(uuid: String) {
-        handleEvent(DetailEvents.GetUser(uuid))
+        handleEvent(DetailEvent.GetUser(uuid))
+    }
+
+    fun deleteUser(user: User) {
+        handleEvent(DetailEvent.DeleteUser(user))
     }
 
 

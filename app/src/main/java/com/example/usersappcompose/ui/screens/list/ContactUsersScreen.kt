@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,7 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,61 +54,60 @@ fun UsersListScreen(
     navController: NavController,
 ) {
 
-    var selectedSortingOption by remember { mutableStateOf(Category.ALL) }
-    val users = viewModel.users.collectAsState()
-    val searchText by viewModel.searchText.collectAsState()
-    val isSearching by viewModel.isSearching.collectAsState()
 
-    users.value?.let { userList ->
+    val state by viewModel.state.collectAsState()
 
 
-        Column(modifier = Modifier.fillMaxSize()) {
-            Row(modifier = Modifier.fillMaxWidth()) {
-                SortingMenu(
-                    onSortingOptionSelected = { option ->
-                        selectedSortingOption = option
-                    }
-                )
-                TextField(
-                    value = searchText,
-                    onValueChange = viewModel::onSearchTextChange,
-                    placeholder = { Text(text = stringResource(id = R.string.search)) },
-                    modifier = Modifier.padding(8.dp)
-                )
+    Column(modifier = Modifier.fillMaxSize()) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            SortingMenu(
+                onSortingOptionSelected = viewModel::sortedList,
+                dropDownMenuItem = DropDownMenuItem.menuList(),
+            )
+            TextField(
+                value = state.searchQuery,
+                onValueChange = viewModel::onSearchTextChange,
+                placeholder = { Text(text = stringResource(id = R.string.search)) },
+                modifier = Modifier.padding(8.dp)
+            )
+        }
+        if (state.isSearching) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
-            if (isSearching) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        } else {
+            Box(modifier = Modifier.fillMaxSize()) {
+
+                LazyColumn(
+                    contentPadding = PaddingValues(
+                        horizontal = 16.dp,
+                        vertical = 32.dp
+                    )
+                ) {
+                    items(items = state.contacts) { user ->
+                        ListItem(user = user, onUserClick = {
+                            navController.navigate(Screen.UserDetailScreen.route + "/${user.uuid}")
+                        })
+                    }
                 }
-            } else {
-                Box(modifier = Modifier.fillMaxSize()) {
 
-                    LazyColumn(modifier = Modifier.padding(vertical = 40.dp, horizontal = 16.dp)) {
-                        items(items = sortUsers(userList, selectedSortingOption)) { user ->
-                            ListItem(user = user, onUserClick = {
-                                navController.navigate(Screen.UserDetailScreen.route + "/${user.uuid}")
-                            })
-                        }
-                    }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 4.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 4.dp),
-                        horizontalArrangement = Arrangement.End
-                    ) {
+                    EditUserButton(navController = navController)
+                }
 
-                        EditUserButton(navController = navController)
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .padding(end = 40.dp, bottom = 40.dp),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.Bottom
-                    ) {
-                        AddContactButton(navController = navController)
-                    }
+                Row(
+                    modifier = Modifier
+                        .padding(end = 4.dp, bottom = 4.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    AddContactButton(navController = navController)
                 }
             }
         }
@@ -164,13 +164,21 @@ fun AddContactButton(navController: NavController, modifier: Modifier = Modifier
     }
 }
 
+
 @Composable
-fun SortingMenu(onSortingOptionSelected: (Category) -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
+fun SortingMenu(
+    dropDownMenuItem: List<DropDownMenuItem>,
+    onSortingOptionSelected: (String) -> Unit,
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+
     IconButton(
-        onClick = { expanded = true }, modifier = Modifier
+        onClick = {
+            expanded = true
+        }, modifier = Modifier
             .padding(vertical = 16.dp, horizontal = 32.dp)
             .size(40.dp, 40.dp)
+
     ) {
         Icon(
             Icons.Default.SortByAlpha, contentDescription = null
@@ -181,49 +189,26 @@ fun SortingMenu(onSortingOptionSelected: (Category) -> Unit) {
         expanded = expanded,
         onDismissRequest = { expanded = false }
     ) {
-
-        DropdownMenuItem(
-            text = { Text(stringResource(id = R.string.all)) },
-            onClick = {
-                expanded = false
-
-            }
-        )
-        DropdownMenuItem(
-            text = { Text(stringResource(id = R.string.family)) },
-            onClick = {
-                expanded = false
-                onSortingOptionSelected.invoke(Category.FAMILY)
-            }
-        )
-        DropdownMenuItem(
-            text = { Text(stringResource(id = R.string.friends)) },
-            onClick = {
-                expanded = false
-                onSortingOptionSelected.invoke(Category.FRIENDS)
-            }
-        )
-        DropdownMenuItem(
-            text = { Text(stringResource(id = R.string.work)) },
-            onClick = {
-                expanded = false
-                onSortingOptionSelected.invoke(Category.WORK)
-
-            }
-        )
+        dropDownMenuItem.forEach { item ->
+            DropdownMenuItem(
+                text = { Text(text = item.text) },
+                onClick = {
+                    onSortingOptionSelected.invoke(item.text)
+                    expanded = false
+                })
+        }
     }
 }
 
-fun sortUsers(contacts: List<User>, sortingOption: Category): List<User> {
-    return when (sortingOption) {
-        Category.ALL -> contacts
-        Category.FAMILY -> sorting(contacts, Category.FAMILY.name)
-        Category.FRIENDS -> sorting(contacts, Category.FRIENDS.name)
-        Category.WORK -> sorting(contacts, Category.WORK.name)
+data class DropDownMenuItem(val text: String) {
+    companion object {
+        fun menuList(): List<DropDownMenuItem> {
+            return listOf(
+                DropDownMenuItem(Category.ALL.name),
+                DropDownMenuItem(Category.FAMILY.name),
+                DropDownMenuItem(Category.FRIENDS.name),
+                DropDownMenuItem(Category.WORK.name)
+            )
+        }
     }
-}
-
-fun sorting(contacts: List<User>, category: String): List<User> {
-    return contacts.filter { it.category == category }
-        .sortedBy { it.firstName }
 }

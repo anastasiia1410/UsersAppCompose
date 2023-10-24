@@ -20,4 +20,7 @@
     <string name="choose_user_category">Choose user category</string>
     <string name="search">Search</string>
     <string name="create_user_screen">create_user_screen</string>
+    <string name="want_delete">Delete this contact? </string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 </resources>

@@ -2,12 +2,17 @@ package com.example.usersappcompose.ui.screens.create_user
 
 import com.example.usersappcompose.core.Reducer
 
-class CurrentUserReducer : Reducer<CurrentUserEvent, CurrentUserSate> {
-    override fun reduce(event: CurrentUserEvent, state: CurrentUserSate): CurrentUserSate {
+class CurrentUserReducer : Reducer<CreateUserEvent, CreateUserSate> {
+    override fun reduce(event: CreateUserEvent, state: CreateUserSate): CreateUserSate {
         return when (event) {
-            is CurrentUserEvent.AddUser -> state
-            is CurrentUserEvent.Error -> state
-            is CurrentUserEvent.SaveCurrentUser -> state.copy(user = event.currentUser)
+            is CreateUserEvent.SetFirstName -> state.copy(firstName = event.firstName)
+            is CreateUserEvent.SetLastName -> state.copy(lastName = event.lastName)
+            is CreateUserEvent.SetPhoneNumber -> state.copy(phoneNumber = event.phoneNumber)
+            is CreateUserEvent.SetEmail -> state.copy(email = event.email)
+            is CreateUserEvent.SetPicture -> state.copy(picture = event.picture)
+            is CreateUserEvent.Error -> state
+            CreateUserEvent.ReceiveUser -> state
+            CreateUserEvent.None -> state
         }
     }
 }

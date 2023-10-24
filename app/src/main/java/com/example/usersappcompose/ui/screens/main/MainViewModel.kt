@@ -29,7 +29,7 @@ class MainViewModel @Inject constructor(private val databaseRepository: Database
 
     private fun checkCurrentUser() {
         viewModelScope.launch(Dispatchers.IO) {
-            val currentUser = databaseRepository.getCurrentUser()
+            val currentUser = databaseRepository.getUserById("1")
             withContext(Dispatchers.Main) {
                 if (currentUser == null) {
                     _startScreenFlow.value = Screen.CreateUserScreen.route

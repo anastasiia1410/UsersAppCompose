@@ -17,8 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -37,6 +35,7 @@ fun CreateUserScreen(
     viewModel: CreateUserViewModel = hiltViewModel(),
     navController: NavController,
 ) {
+    val state by viewModel.state.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -44,31 +43,24 @@ fun CreateUserScreen(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        val state by viewModel.state.collectAsState()
-        val currentUserState = remember { mutableStateOf(state) }
 
-
-            Text(
-                text = stringResource(id = R.string.create_profile),
-                style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold)
-            )
+        Text(
+            text = stringResource(id = R.string.create_profile),
+            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold)
+        )
 
         val launcher = rememberLauncherForActivityResult(
             contract =
             ActivityResultContracts.GetContent()
         ) { uri: Uri? ->
             uri?.let {
-                val updateUser = currentUserState.value.user?.copy(picture = it.toString())
-                currentUserState.value = currentUserState.value.copy(user = updateUser)
+                viewModel.changePicture(it.toString())
             }
 
         }
         OutlinedTextField(
-            value = currentUserState.value.user?.firstName ?: "",
-            onValueChange = {
-                val updatedUser = currentUserState.value.user?.copy(firstName = it)
-                currentUserState.value = currentUserState.value.copy(user = updatedUser)
-            },
+            value = state.firstName,
+            onValueChange = viewModel::changeFirstName,
             label = { Text(stringResource(id = R.string.first_name)) },
             modifier = Modifier
                 .padding(16.dp)
@@ -77,11 +69,8 @@ fun CreateUserScreen(
 
 
         OutlinedTextField(
-            value = currentUserState.value.user?.lastName ?: "",
-            onValueChange = {
-                val updatedUser = currentUserState.value.user?.copy(lastName = it)
-                currentUserState.value = currentUserState.value.copy(user = updatedUser)
-            },
+            value = state.lastName,
+            onValueChange = viewModel::changeLastName,
             label = { Text(stringResource(id = R.string.last_name)) },
             modifier = Modifier
                 .padding(16.dp)
@@ -89,11 +78,8 @@ fun CreateUserScreen(
         )
 
         OutlinedTextField(
-            value = currentUserState.value.user?.phoneNumber ?: "",
-            onValueChange = {
-                val updatedUser = currentUserState.value.user?.copy(phoneNumber = it)
-                currentUserState.value = currentUserState.value.copy(user = updatedUser)
-            },
+            value = state.phoneNumber,
+            onValueChange = viewModel::changePhoneNumber,
             label = { Text(stringResource(id = R.string.phone_number)) },
             modifier = Modifier
                 .padding(16.dp)
@@ -103,11 +89,8 @@ fun CreateUserScreen(
 
 
         OutlinedTextField(
-            value = currentUserState.value.user?.email ?: "",
-            onValueChange = {
-                val updatedUser = currentUserState.value.user?.copy(email = it)
-                currentUserState.value = currentUserState.value.copy(user = updatedUser)
-            },
+            value = state.email,
+            onValueChange = viewModel::changeEmail,
             label = { Text(stringResource(id = R.string.email)) },
             modifier = Modifier
                 .padding(16.dp)
@@ -121,7 +104,7 @@ fun CreateUserScreen(
         }
 
         Button(onClick = {
-            viewModel.saveCurrentUser(currentUserState.value.user!!)
+            viewModel.saveCurrentUser()
             navController.navigate(Screen.UsersContactScreen.route) {
                 popUpTo(Screen.CreateUserScreen.route) { inclusive = true }
 
@@ -137,6 +120,7 @@ fun CreateUserScreen(
         }
     }
 }
+
 
 
 

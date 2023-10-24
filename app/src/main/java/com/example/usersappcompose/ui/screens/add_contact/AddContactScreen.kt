@@ -2,6 +2,7 @@ package com.example.usersappcompose.ui.screens.add_contact
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,10 +12,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -37,26 +38,13 @@ fun AddContactScreen(
 ) {
 
     val pager = viewModel.pager.collectAsLazyPagingItems()
-    var openDialog by rememberSaveable { mutableStateOf<User?>(null) }
     LazyColumn(
-        modifier = Modifier
-            .padding(16.dp)
+        contentPadding = PaddingValues(16.dp)
     ) {
         items(pager.itemCount, pager.itemKey { it.uuid }) { index ->
             val user = pager[index]
-            user?.let { us ->
-                ListItem(user = us, onUserClick = {
-                    openDialog = us
-                })
-                if (openDialog != null && openDialog == us) {
-                    CategoryDialog { category ->
-                        if (category != null) {
-                            openDialog = null
-                            viewModel.saveContact(user.copy(category = category.name))
-                            navController.navigate(Screen.UsersContactScreen.route)
-                        }
-                    }
-                }
+            user?.also {
+                ListItem(viewModel, navController, it)
             }
         }
     }
@@ -64,10 +52,15 @@ fun AddContactScreen(
 
 
 @Composable
-fun ListItem(user: User, onUserClick: ((uuid: String) -> Unit)) {
+fun ListItem(
+    viewModel: AddContactViewModel,
+    navController: NavController,
+    user: User,
+) {
+    var showDialog by remember { mutableStateOf(false) }
     Row(modifier = Modifier
         .clickable {
-            onUserClick.invoke(user.uuid)
+            showDialog = true
         }) {
         Text(
             text = user.firstName,
@@ -75,15 +68,20 @@ fun ListItem(user: User, onUserClick: ((uuid: String) -> Unit)) {
                 .copy(fontWeight = FontWeight.ExtraBold)
         )
     }
+    if (showDialog) {
+        CategoryDialog { category ->
+            if (category != null) {
+                showDialog = false
+                viewModel.saveContact(user, category)
+                navController.navigate(Screen.UsersContactScreen.route)
+            }
+        }
+    }
 }
 
 @Composable
 fun CategoryDialog(onItemClicked: (Category?) -> Unit) {
     val selectedCategory = remember { mutableStateOf<Category?>(null) }
-    val familyChecked = remember { mutableStateOf(selectedCategory.value == Category.FAMILY) }
-    val friendsChecked = remember { mutableStateOf(selectedCategory.value == Category.FRIENDS) }
-    val workChecked = remember { mutableStateOf(selectedCategory.value == Category.WORK) }
-
     AlertDialog(
         onDismissRequest = {},
         confirmButton = {
@@ -97,28 +95,26 @@ fun CategoryDialog(onItemClicked: (Category?) -> Unit) {
         },
         text = {
             Column {
-                CategoryRow(stringResource(id = R.string.family), familyChecked) {
-                    selectedCategory.value = if (it) Category.FAMILY else null
-                }
-                CategoryRow(stringResource(id = R.string.friends), friendsChecked) {
-                    selectedCategory.value = if (it) Category.FRIENDS else null
-                }
-                CategoryRow(stringResource(id = R.string.work), workChecked) {
-                    selectedCategory.value = if (it) Category.WORK else null
-                }
+                CategoryRow(stringResource(id = R.string.family), selectedCategory, Category.FAMILY)
+                CategoryRow(
+                    stringResource(id = R.string.friends),
+                    selectedCategory,
+                    Category.FRIENDS
+                )
+                CategoryRow(stringResource(id = R.string.work), selectedCategory, Category.WORK)
             }
         }
     )
 }
 
 @Composable
-fun CategoryRow(label: String, checked: MutableState<Boolean>, onCheckedChange: (Boolean) -> Unit) {
+fun CategoryRow(label: String, selectedCategory: MutableState<Category?>, category: Category?) {
+    val checked = remember { derivedStateOf { selectedCategory.value == category } }
     Row {
         Checkbox(
             checked = checked.value,
-            onCheckedChange = {
-                checked.value = it
-                onCheckedChange(it)
+            onCheckedChange = { newChecked ->
+                selectedCategory.value = if (newChecked) category else null
             }
         )
         Text(text = label, fontSize = 20.sp, modifier = Modifier.padding(8.dp))
