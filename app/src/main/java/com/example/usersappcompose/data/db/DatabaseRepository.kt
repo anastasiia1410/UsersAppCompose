@@ -10,6 +10,8 @@ interface DatabaseRepository {
 
     suspend fun getUserById(uuid: String): User?
 
+    suspend fun getUsersByCategory(category: String): List<User>
+
     suspend fun updateUserInfo(user: User)
 
     suspend fun deleteUser(user: User)

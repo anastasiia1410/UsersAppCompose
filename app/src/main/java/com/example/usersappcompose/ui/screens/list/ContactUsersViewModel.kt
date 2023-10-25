@@ -13,7 +13,7 @@ class ContactUsersViewModel @Inject constructor(databaseRepository: DatabaseRepo
     BaseViewModel<ContactsEvent, ContactsState>(
         useCases = listOf(
             GetContactUseCase(databaseRepository),
-            SortByOptionUseCase(),
+            SortByOptionUseCase(databaseRepository),
             SearchUsersUseCase()
         ),
         reducer = ContactsReducer(),

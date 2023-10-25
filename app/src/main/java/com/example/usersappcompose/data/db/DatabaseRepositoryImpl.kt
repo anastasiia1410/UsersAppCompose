@@ -19,6 +19,10 @@ class DatabaseRepositoryImpl @Inject constructor(private val userDao: UserDao) :
         return userDao.getUserById(uuid)?.toUser()
     }
 
+    override suspend fun getUsersByCategory(category: String): List<User> {
+        return userDao.getUsersByCategory(category).map { it.toUser() }
+    }
+
     override suspend fun updateUserInfo(user: User) {
         userDao.updateUser(user.toUserDatabase())
     }
