@@ -7,7 +7,7 @@ class AddContactReducer : Reducer<AddContactEvent, AddContactState> {
         return when(event){
             is AddContactEvent.Error -> state
             is AddContactEvent.MoveToContactsScreen -> state
-            is AddContactEvent.SaveUserToContact -> state.copy(category = event.user.category ?: "")
+            is AddContactEvent.SaveUserToContact -> state.copy(category = event.contact.category)
         }
     }
 }

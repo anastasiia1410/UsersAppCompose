@@ -7,10 +7,9 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.usersappcompose.core.BaseViewModel
 import com.example.usersappcompose.data.UsersPageSource
-import com.example.usersappcompose.data.db.DatabaseRepository
 import com.example.usersappcompose.data.network.Api
 import com.example.usersappcompose.ui.entity.Category
-import com.example.usersappcompose.ui.entity.User
+import com.example.usersappcompose.ui.entity.Contact
 import com.example.usersappcompose.ui.screens.add_contact.use_case.SaveToDbUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,15 +20,15 @@ import javax.inject.Inject
 @HiltViewModel
 class AddContactViewModel @Inject constructor(
     private val pagingSource: UsersPageSource,
-    databaseRepository: DatabaseRepository,
+    saveToDbUseCase: SaveToDbUseCase,
 ) :
     BaseViewModel<AddContactEvent, AddContactState>(
-        useCases = listOf(SaveToDbUseCase(databaseRepository)),
+        useCases = listOf(saveToDbUseCase),
         reducer = AddContactReducer(),
-        initialState = AddContactState(category = "")
+        initialState = AddContactState(category = Category.ALL)
     ) {
 
-    val pager: StateFlow<PagingData<User>> = Pager(
+    val pager: StateFlow<PagingData<Contact>> = Pager(
         config = PagingConfig(
             pageSize = Api.DEFAULT_PAGE_SIZE,
             enablePlaceholders = false,
@@ -42,8 +41,7 @@ class AddContactViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
 
-    fun saveContact(user: User, category: Category) {
-        handleEvent(AddContactEvent.SaveUserToContact(user.copy(category = category.name)))
+    fun saveContact(contact: Contact, category: Category) {
+        handleEvent(AddContactEvent.SaveUserToContact(contact.copy(category = category)))
     }
-
 }

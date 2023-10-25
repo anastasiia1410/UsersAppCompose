@@ -1,13 +1,13 @@
 package com.example.usersappcompose.data.network
 
-import com.example.usersappcompose.data.network.entity.toUser
-import com.example.usersappcompose.ui.entity.User
+import com.example.usersappcompose.data.network.entity.toContact
+import com.example.usersappcompose.ui.entity.Contact
 import javax.inject.Inject
 
 class NetworkRepositoryImpl @Inject constructor(private val api: Api) : NetworkRepository {
-    override suspend fun getUsers(): List<User> {
-        return api.getUsers().userList.map {
-            it.toUser()
+    override suspend fun getContacts(): List<Contact> {
+        return api.getContacts().contactList.map {
+            it.toContact()
         }
     }
 }

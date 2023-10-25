@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,6 +17,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -22,6 +26,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.usersappcompose.R
 import com.example.usersappcompose.ui.screens.main.Screen
 
@@ -39,10 +45,22 @@ fun EditUserScreen(navController: NavController, viewModel: EditUserViewModel = 
 
     ) {
 
+
         Text(
             text = stringResource(id = R.string.edit_profile),
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.ExtraBold)
         )
+
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(state.picture)
+                .build(),
+            contentDescription = null,
+            modifier = Modifier
+                .size(60.dp, 60.dp)
+                .clip(CircleShape)
+        )
+
         OutlinedTextField(
             value = state.firstName,
             onValueChange = viewModel::changeFirstName,
@@ -100,6 +118,8 @@ fun EditUserScreen(navController: NavController, viewModel: EditUserViewModel = 
         }
     }
 }
+
+
 
 
 

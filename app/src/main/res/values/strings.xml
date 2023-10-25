@@ -12,14 +12,11 @@
     <string name="email">Email</string>
     <string name="select_image">Select image</string>
     <string name="update">Update</string>
-    <string name="sort_by">Sort by: </string>
-    <string name="all">All</string>
     <string name="friends">Friends</string>
     <string name="family">Family</string>
     <string name="work">Work</string>
     <string name="choose_user_category">Choose user category</string>
     <string name="search">Search</string>
-    <string name="create_user_screen">create_user_screen</string>
     <string name="want_delete">Delete this contact? </string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>

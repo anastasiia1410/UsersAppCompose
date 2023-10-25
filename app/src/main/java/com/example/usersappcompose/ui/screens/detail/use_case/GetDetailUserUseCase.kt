@@ -15,7 +15,7 @@ class GetDetailUserUseCase @Inject constructor(private val databaseRepository: D
     override suspend fun invoke(event: DetailEvent, state: DetailState): DetailEvent {
         return ((event as? DetailEvent.GetUser)?.let {
             try {
-                val user = databaseRepository.getUserById(event.uuid)
+                val user = databaseRepository.getContactById(event.uuid)
                 user?.let {
                     return DetailEvent.ShowUser(user)
                 }

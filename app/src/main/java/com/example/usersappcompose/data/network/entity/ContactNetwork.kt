@@ -1,9 +1,10 @@
 package com.example.usersappcompose.data.network.entity
 
-import com.example.usersappcompose.ui.entity.User
+import com.example.usersappcompose.ui.entity.Category
+import com.example.usersappcompose.ui.entity.Contact
 import com.google.gson.annotations.SerializedName
 
-data class UserNetwork(
+data class ContactNetwork(
     @SerializedName("name")
     val name: NameNetwork,
     @SerializedName("email")
@@ -11,18 +12,17 @@ data class UserNetwork(
     @SerializedName("login")
     val login: LoginNetwork,
     @SerializedName("picture")
-    val picture: PictureNetwork
+    val picture: PictureNetwork,
 )
 
-fun UserNetwork.toUser(): User {
-    return User(
+fun ContactNetwork.toContact(): Contact {
+    return Contact(
         firstName = name.firstName,
         lastName = name.lastName,
         email = email,
         uuid = login.uuid,
         picture = picture.largePicture,
-        category = null,
-        phoneNumber = null
+        category = Category.ALL,
     )
 }
 

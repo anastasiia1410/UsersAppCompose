@@ -44,7 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.usersappcompose.R
 import com.example.usersappcompose.ui.entity.Category
-import com.example.usersappcompose.ui.entity.User
+import com.example.usersappcompose.ui.entity.Contact
 import com.example.usersappcompose.ui.screens.main.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,7 +56,6 @@ fun UsersListScreen(
 
 
     val state by viewModel.state.collectAsState()
-
 
     Column(modifier = Modifier.fillMaxSize()) {
         Row(modifier = Modifier.fillMaxWidth()) {
@@ -71,7 +70,7 @@ fun UsersListScreen(
                 modifier = Modifier.padding(8.dp)
             )
         }
-        if (state.isSearching) {
+        if (state.isSearching || state.isSorting) {
             Box(modifier = Modifier.fillMaxSize()) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
@@ -85,7 +84,7 @@ fun UsersListScreen(
                     )
                 ) {
                     items(items = state.contacts) { user ->
-                        ListItem(user = user, onUserClick = {
+                        ListItem(contact = user, onUserClick = {
                             navController.navigate(Screen.UserDetailScreen.route + "/${user.uuid}")
                         })
                     }
@@ -115,15 +114,15 @@ fun UsersListScreen(
 }
 
 @Composable
-fun ListItem(user: User, onUserClick: ((uuid: String) -> Unit)) {
+fun ListItem(contact: Contact, onUserClick: ((uuid: String) -> Unit)) {
 
     Row(modifier = Modifier
         .padding(4.dp)
         .clickable {
-            onUserClick.invoke(user.uuid)
+            onUserClick.invoke(contact.uuid)
         }) {
         Text(
-            text = user.firstName,
+            text = contact.firstName,
             style = MaterialTheme.typography.headlineMedium
                 .copy(fontWeight = FontWeight.Black)
         )
@@ -168,7 +167,7 @@ fun AddContactButton(navController: NavController, modifier: Modifier = Modifier
 @Composable
 fun SortingMenu(
     dropDownMenuItem: List<DropDownMenuItem>,
-    onSortingOptionSelected: (String) -> Unit,
+    onSortingOptionSelected: (Category) -> Unit,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -191,23 +190,23 @@ fun SortingMenu(
     ) {
         dropDownMenuItem.forEach { item ->
             DropdownMenuItem(
-                text = { Text(text = item.text) },
+                text = { Text(text = item.category.name) },
                 onClick = {
-                    onSortingOptionSelected.invoke(item.text)
+                    onSortingOptionSelected.invoke(item.category)
                     expanded = false
                 })
         }
     }
 }
 
-data class DropDownMenuItem(val text: String) {
+data class DropDownMenuItem(val category: Category) {
     companion object {
         fun menuList(): List<DropDownMenuItem> {
             return listOf(
-                DropDownMenuItem(Category.ALL.name),
-                DropDownMenuItem(Category.FAMILY.name),
-                DropDownMenuItem(Category.FRIENDS.name),
-                DropDownMenuItem(Category.WORK.name)
+                DropDownMenuItem(Category.ALL),
+                DropDownMenuItem(Category.FAMILY),
+                DropDownMenuItem(Category.FRIENDS),
+                DropDownMenuItem(Category.WORK)
             )
         }
     }

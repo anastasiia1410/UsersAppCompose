@@ -6,25 +6,23 @@ class ContactsReducer : Reducer<ContactsEvent, ContactsState> {
     override fun reduce(event: ContactsEvent, state: ContactsState): ContactsState {
         return when (event) {
             is ContactsEvent.Error -> state
-            ContactsEvent.GetContacts -> state.copy(isSearching = false, isSorting = false)
-            is ContactsEvent.ShowContacts -> state.copy(contacts = event.contacts)
-            is ContactsEvent.SearchByValue -> state.copy(
+            ContactsEvent.GetContacts -> state
+            is ContactsEvent.ShowContacts -> state.copy(
+                contacts = event.contacts,
+                isSorting = false,
+                isSearching = false
+            )
+
+            is ContactsEvent.FilterAndSearch -> state.copy(
                 isSearching = true,
-                searchQuery = event.searchQuery
+                isSorting = true,
+                searchQuery = event.searchQuery,
+                sortingOption = event.sortingOption
             )
 
             is ContactsEvent.ShowFoundUsers -> state.copy(
-                isSearching = false,
-                contacts = event.contacts
-            )
-
-            is ContactsEvent.SortContacts -> state.copy(
-                sortingOption = event.sortingOption,
-                isSorting = true
-            )
-
-            is ContactsEvent.ReceiveSortedList -> state.copy(
                 isSorting = false,
+                isSearching = false,
                 contacts = event.contacts
             )
         }

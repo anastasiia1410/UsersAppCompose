@@ -34,7 +34,7 @@ import com.example.usersappcompose.ui.screens.main.Screen
 @Composable
 fun UserDetailScreen(viewModel: UserDetailViewModel, navController: NavController) {
     val state by viewModel.state.collectAsState()
-    val user = state.user
+    val user = state.contact
     var showDialog by remember { mutableStateOf(false) }
     if (user != null) {
         Column(
@@ -59,7 +59,7 @@ fun UserDetailScreen(viewModel: UserDetailViewModel, navController: NavControlle
                     onDismissRequest = {},
                     confirmButton = {
                         Text(text = stringResource(id = R.string.delete), Modifier.clickable {
-                            viewModel.deleteUser(user)
+                            viewModel.deleteUser()
                             navController.navigate(Screen.UsersContactScreen.route)
                             showDialog = false
                         })
@@ -85,7 +85,7 @@ fun UserDetailScreen(viewModel: UserDetailViewModel, navController: NavControlle
                         .clip(CircleShape)
                 )
                 Text(
-                    text = stringResource(id = R.string.category, category!!),
+                    text = stringResource(id = R.string.category, category),
                     Modifier.padding(16.dp)
                 )
                 Text(

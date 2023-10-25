@@ -7,7 +7,7 @@ import retrofit2.http.Query
 interface Api {
 
     @GET("api/")
-    suspend fun getUsers(
+    suspend fun getContacts(
         @Query("page") page: Int = 1,
         @Query("results") results: Int = DEFAULT_PAGE_SIZE,
     ): GetUsersResponse

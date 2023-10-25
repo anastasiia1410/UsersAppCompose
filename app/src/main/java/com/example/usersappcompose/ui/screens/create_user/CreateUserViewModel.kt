@@ -1,16 +1,15 @@
 package com.example.usersappcompose.ui.screens.create_user
 
 import com.example.usersappcompose.core.BaseViewModel
-import com.example.usersappcompose.data.db.DatabaseRepository
 import com.example.usersappcompose.ui.screens.create_user.use_case.SaveCurrentUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateUserViewModel @Inject constructor(databaseRepository: DatabaseRepository) :
+class CreateUserViewModel @Inject constructor(saveCurrentUserUseCase: SaveCurrentUserUseCase) :
     BaseViewModel<CreateUserEvent, CreateUserSate>(
         useCases = listOf(
-            SaveCurrentUserUseCase(databaseRepository)
+            saveCurrentUserUseCase
         ),
         reducer = CurrentUserReducer(),
         initialState = CreateUserSate("", "", "", "", "")

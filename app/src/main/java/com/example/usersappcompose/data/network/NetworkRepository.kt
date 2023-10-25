@@ -1,8 +1,8 @@
 package com.example.usersappcompose.data.network
 
-import com.example.usersappcompose.ui.entity.User
+import com.example.usersappcompose.ui.entity.Contact
 
 interface NetworkRepository {
 
-    suspend fun getUsers(): List<User>
+    suspend fun getContacts(): List<Contact>
 }

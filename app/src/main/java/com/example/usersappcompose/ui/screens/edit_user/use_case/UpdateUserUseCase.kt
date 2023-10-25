@@ -24,7 +24,6 @@ class UpdateUserUseCase @Inject constructor(private val databaseRepository: Data
                     phoneNumber = state.phoneNumber,
                     email = state.email,
                     picture = state.picture,
-                    category = null
                 )
                 databaseRepository.updateUserInfo(user)
                 return EditEvent.None

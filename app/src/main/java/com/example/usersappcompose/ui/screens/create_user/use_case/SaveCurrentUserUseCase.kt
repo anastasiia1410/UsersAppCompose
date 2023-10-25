@@ -24,7 +24,6 @@ class SaveCurrentUserUseCase @Inject constructor(private val databaseRepository:
                 phoneNumber = state.phoneNumber,
                 email = state.email,
                 picture = state.picture,
-                category = null
             )
             try {
                 databaseRepository.insertUser(user)

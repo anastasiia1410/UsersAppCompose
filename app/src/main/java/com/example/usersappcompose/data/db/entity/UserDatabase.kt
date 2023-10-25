@@ -6,14 +6,13 @@ import com.example.usersappcompose.ui.entity.User
 
 @Entity(tableName = "User")
 data class UserDatabase(
-    @PrimaryKey(false)
+    @PrimaryKey(autoGenerate = false)
     val uuid: String,
     val firstName: String,
     val lastName: String,
-    val phoneNumber : String?,
+    val phoneNumber: String,
     val email: String,
     val picture: String,
-    val category: String?,
 )
 
 fun User.toUserDatabase(): UserDatabase {
@@ -24,7 +23,6 @@ fun User.toUserDatabase(): UserDatabase {
         email = email,
         uuid = uuid,
         picture = picture,
-        category = category
     )
 }
 
@@ -36,7 +34,5 @@ fun UserDatabase.toUser(): User {
         email = email,
         uuid = uuid,
         picture = picture,
-        category = category
     )
 }
-

@@ -1,18 +1,20 @@
 package com.example.usersappcompose.ui.screens.edit_user
 
 import com.example.usersappcompose.core.BaseViewModel
-import com.example.usersappcompose.data.db.DatabaseRepository
 import com.example.usersappcompose.ui.screens.edit_user.use_case.GetUserUseCase
 import com.example.usersappcompose.ui.screens.edit_user.use_case.UpdateUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class EditUserViewModel @Inject constructor(databaseRepository: DatabaseRepository) :
+class EditUserViewModel @Inject constructor(
+    getUserUseCase: GetUserUseCase,
+    updateUserUseCase: UpdateUserUseCase,
+) :
     BaseViewModel<EditEvent, EditState>(
         useCases = listOf(
-            GetUserUseCase(databaseRepository),
-            UpdateUserUseCase(databaseRepository)
+            getUserUseCase,
+            updateUserUseCase
         ),
         reducer = EditReducer(),
         initialState = EditState("", "", "", "", "")

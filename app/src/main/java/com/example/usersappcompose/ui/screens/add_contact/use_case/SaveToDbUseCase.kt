@@ -15,7 +15,7 @@ class SaveToDbUseCase(val databaseRepository: DatabaseRepository) :
     override suspend fun invoke(event: AddContactEvent, state: AddContactState): AddContactEvent {
         return ((event) as? AddContactEvent.SaveUserToContact)?.let {
             try {
-                databaseRepository.insertUser(event.user)
+                databaseRepository.insertContact(event.contact)
                 return AddContactEvent.MoveToContactsScreen
 
             } catch (e: SQLException) {

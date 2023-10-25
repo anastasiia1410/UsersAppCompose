@@ -7,7 +7,7 @@ import com.example.usersappcompose.ui.screens.detail.DetailState
 import java.sql.SQLException
 import javax.inject.Inject
 
-class DeleteUserUseCase @Inject constructor(private val databaseRepository: DatabaseRepository) :
+class DeleteContactUseCase @Inject constructor(private val databaseRepository: DatabaseRepository) :
     UseCase<DetailEvent, DetailState> {
     override fun canHandle(event: DetailEvent): Boolean {
         return event is DetailEvent.DeleteUser
@@ -16,7 +16,9 @@ class DeleteUserUseCase @Inject constructor(private val databaseRepository: Data
     override suspend fun invoke(event: DetailEvent, state: DetailState): DetailEvent {
         return ((event as? DetailEvent.DeleteUser))?.let {
             try {
-                databaseRepository.deleteUser(event.user)
+                if(state.contact != null) {
+                    databaseRepository.deleteContact(state.contact)
+                }
                 return DetailEvent.None
             } catch (e: SQLException) {
                 return DetailEvent.Error("error $e")

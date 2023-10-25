@@ -28,7 +28,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.example.usersappcompose.R
 import com.example.usersappcompose.ui.entity.Category
-import com.example.usersappcompose.ui.entity.User
+import com.example.usersappcompose.ui.entity.Contact
 import com.example.usersappcompose.ui.screens.main.Screen
 
 @Composable
@@ -42,9 +42,11 @@ fun AddContactScreen(
         contentPadding = PaddingValues(16.dp)
     ) {
         items(pager.itemCount, pager.itemKey { it.uuid }) { index ->
-            val user = pager[index]
-            user?.also {
-                ListItem(viewModel, navController, it)
+            val contact = pager[index]
+            contact?.also { cont ->
+                ListItem(navController, cont, onSaveContact = {
+                    viewModel.saveContact(cont, it)
+                })
             }
         }
     }
@@ -53,9 +55,9 @@ fun AddContactScreen(
 
 @Composable
 fun ListItem(
-    viewModel: AddContactViewModel,
     navController: NavController,
-    user: User,
+    contact: Contact,
+    onSaveContact: (Category) -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
     Row(modifier = Modifier
@@ -63,24 +65,26 @@ fun ListItem(
             showDialog = true
         }) {
         Text(
-            text = user.firstName,
+            text = contact.firstName,
             style = MaterialTheme.typography.headlineMedium
                 .copy(fontWeight = FontWeight.ExtraBold)
         )
     }
     if (showDialog) {
-        CategoryDialog { category ->
+        CategoryDialog(onItemClicked = { category ->
             if (category != null) {
                 showDialog = false
-                viewModel.saveContact(user, category)
+                onSaveContact.invoke(category)
                 navController.navigate(Screen.UsersContactScreen.route)
             }
-        }
+        }, onCancelClick = {
+            showDialog = it
+        })
     }
 }
 
 @Composable
-fun CategoryDialog(onItemClicked: (Category?) -> Unit) {
+fun CategoryDialog(onItemClicked: (Category?) -> Unit, onCancelClick: (Boolean) -> Unit) {
     val selectedCategory = remember { mutableStateOf<Category?>(null) }
     AlertDialog(
         onDismissRequest = {},
@@ -103,6 +107,14 @@ fun CategoryDialog(onItemClicked: (Category?) -> Unit) {
                 )
                 CategoryRow(stringResource(id = R.string.work), selectedCategory, Category.WORK)
             }
+        },
+        dismissButton = {
+            Text(text = stringResource(id = R.string.cancel),
+                Modifier
+                    .clickable {
+                        onCancelClick.invoke(false)
+                    }
+                    .padding(end = 16.dp))
         }
     )
 }
