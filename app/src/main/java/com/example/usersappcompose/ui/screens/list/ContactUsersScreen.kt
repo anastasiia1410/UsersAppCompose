@@ -41,19 +41,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.usersappcompose.R
 import com.example.usersappcompose.ui.entity.Category
 import com.example.usersappcompose.ui.entity.Contact
-import com.example.usersappcompose.ui.screens.main.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UsersListScreen(
     viewModel: ContactUsersViewModel = hiltViewModel(),
-    navController: NavController,
 ) {
-
 
     val state by viewModel.state.collectAsState()
 
@@ -84,12 +80,9 @@ fun UsersListScreen(
                     )
                 ) {
                     items(items = state.contacts) { user ->
-                        ListItem(contact = user, onUserClick = {
-                            navController.navigate(Screen.UserDetailScreen.route + "/${user.uuid}")
-                        })
+                        ListItem(contact = user, onUserClick = viewModel::moveToDetailUserScreen)
                     }
                 }
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -97,7 +90,7 @@ fun UsersListScreen(
                     horizontalArrangement = Arrangement.End
                 ) {
 
-                    EditUserButton(navController = navController)
+                    EditUserButton(onClick = viewModel::moveToEditUserScreen)
                 }
 
                 Row(
@@ -106,7 +99,7 @@ fun UsersListScreen(
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.Bottom
                 ) {
-                    AddContactButton(navController = navController)
+                    AddContactButton(onClick = viewModel::moveToAddContactScreen)
                 }
             }
         }
@@ -130,7 +123,7 @@ fun ListItem(contact: Contact, onUserClick: ((uuid: String) -> Unit)) {
 }
 
 @Composable
-fun EditUserButton(navController: NavController) {
+fun EditUserButton(onClick: () -> Unit) {
     Box(
         contentAlignment = Alignment.TopEnd,
         modifier = Modifier
@@ -138,7 +131,7 @@ fun EditUserButton(navController: NavController) {
             .padding(16.dp)
     ) {
         FloatingActionButton(
-            onClick = { navController.navigate(Screen.EditUserScreen.route) },
+            onClick = { onClick.invoke() },
             shape = CircleShape,
         ) {
             Icon(Icons.Filled.House, null)
@@ -147,7 +140,7 @@ fun EditUserButton(navController: NavController) {
 }
 
 @Composable
-fun AddContactButton(navController: NavController, modifier: Modifier = Modifier) {
+fun AddContactButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.BottomEnd,
         modifier = modifier
@@ -155,7 +148,7 @@ fun AddContactButton(navController: NavController, modifier: Modifier = Modifier
             .padding(16.dp)
     ) {
         FloatingActionButton(
-            onClick = { navController.navigate(Screen.AddContactScreen.route) },
+            onClick = { onClick.invoke() },
             shape = CircleShape,
         ) {
             Icon(Icons.Filled.Add, null)

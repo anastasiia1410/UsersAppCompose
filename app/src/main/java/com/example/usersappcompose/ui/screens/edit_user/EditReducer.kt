@@ -19,8 +19,9 @@ class EditReducer : Reducer<EditEvent, EditState> {
             is EditEvent.ChangeLastName -> state.copy(lastName = event.lastName)
             is EditEvent.ChangePhoneNumber -> state.copy(phoneNumber = event.phoneNumber)
             is EditEvent.ChangePicture -> state.copy(picture = event.picture)
-            EditEvent.None -> state
             EditEvent.SaveUpdateUser -> state
+            EditEvent.UpdateUserSaved -> state
+            EditEvent.None -> state
         }
     }
 }

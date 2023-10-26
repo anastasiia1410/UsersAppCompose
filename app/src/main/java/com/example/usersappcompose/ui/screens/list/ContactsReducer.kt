@@ -6,7 +6,6 @@ class ContactsReducer : Reducer<ContactsEvent, ContactsState> {
     override fun reduce(event: ContactsEvent, state: ContactsState): ContactsState {
         return when (event) {
             is ContactsEvent.Error -> state
-            ContactsEvent.GetContacts -> state
             is ContactsEvent.ShowContacts -> state.copy(
                 contacts = event.contacts,
                 isSorting = false,
@@ -25,6 +24,14 @@ class ContactsReducer : Reducer<ContactsEvent, ContactsState> {
                 isSearching = false,
                 contacts = event.contacts
             )
+
+            is ContactsEvent.ClickOnUser -> state.copy(uuid = event.uuid)
+            ContactsEvent.GetContacts -> state
+            ContactsEvent.ClickToAddFAB -> state
+            ContactsEvent.ClickToEditUserFAB -> state
+            ContactsEvent.MoveToAddContactScreen -> state
+            ContactsEvent.MoveToEditUserScreen -> state
+            ContactsEvent.RoutedReceived -> state
         }
     }
 }

@@ -6,11 +6,13 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.usersappcompose.core.BaseViewModel
+import com.example.usersappcompose.core.Router
 import com.example.usersappcompose.data.UsersPageSource
 import com.example.usersappcompose.data.network.Api
 import com.example.usersappcompose.ui.entity.Category
 import com.example.usersappcompose.ui.entity.Contact
 import com.example.usersappcompose.ui.screens.add_contact.use_case.SaveToDbUseCase
+import com.example.usersappcompose.ui.screens.main.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,6 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddContactViewModel @Inject constructor(
+    private val router: Router,
     private val pagingSource: UsersPageSource,
     saveToDbUseCase: SaveToDbUseCase,
 ) :
@@ -40,8 +43,17 @@ class AddContactViewModel @Inject constructor(
     ).flow.cachedIn(viewModelScope)
         .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
+    init {
+        handleUserSavedEvent()
+    }
 
     fun saveContact(contact: Contact, category: Category) {
         handleEvent(AddContactEvent.SaveUserToContact(contact.copy(category = category)))
+    }
+
+    private fun handleUserSavedEvent() {
+        onNavigationRequested(
+            { it is AddContactEvent.UserSaved },
+            { router.navigate(Screen.UsersContactScreen.route) })
     }
 }

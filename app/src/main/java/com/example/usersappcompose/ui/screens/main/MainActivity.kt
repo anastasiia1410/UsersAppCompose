@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.usersappcompose.core.Router
 import com.example.usersappcompose.ui.screens.add_contact.AddContactScreen
 import com.example.usersappcompose.ui.screens.create_user.CreateUserScreen
 import com.example.usersappcompose.ui.screens.detail.UserDetailScreen
@@ -30,9 +31,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ActivityComponent
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var router: Router
     private val viewModel by viewModels<MainViewModel>()
 
     @EntryPoint
@@ -52,7 +56,7 @@ class MainActivity : ComponentActivity() {
                         val startScreen = viewModel.startScreenFlow.value
                         setContent {
                             UsersAppComposeTheme {
-                                UsersApp(startScreen = startScreen)
+                                UsersApp(startScreen = startScreen, router = router)
                             }
                         }
                     }
@@ -63,9 +67,11 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun UsersApp(startScreen: String) {
+fun UsersApp(startScreen: String, router: Router) {
     Surface {
         val navController = rememberNavController()
+        router.attach(navController)
+
         MainNavHost(navController = navController, startScreen = startScreen)
     }
 }
@@ -78,22 +84,22 @@ fun MainNavHost(navController: NavHostController, startScreen: String) {
         startDestination = startScreen
     ) {
         composable(route = Screen.CreateUserScreen.route) {
-            CreateUserScreen(navController = navController)
+            CreateUserScreen()
         }
         composable(route = Screen.UsersContactScreen.route) {
-            UsersListScreen(navController = navController)
+            UsersListScreen()
         }
         composable(route = Screen.UserDetailScreen.route + "/{uuid}") { backStackEntry ->
             val uuid = backStackEntry.arguments?.getString("uuid")
             uuid?.let {
-                UserDetailScreen(noteDetailViewModel(uuid = uuid), navController)
+                UserDetailScreen(noteDetailViewModel(uuid = uuid))
             }
         }
         composable(route = Screen.EditUserScreen.route) {
-            EditUserScreen(navController = navController)
+            EditUserScreen()
         }
         composable(route = Screen.AddContactScreen.route) {
-            AddContactScreen(navController = navController)
+            AddContactScreen()
         }
     }
 }

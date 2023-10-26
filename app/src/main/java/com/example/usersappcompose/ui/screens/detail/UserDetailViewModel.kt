@@ -3,15 +3,18 @@ package com.example.usersappcompose.ui.screens.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.usersappcompose.core.BaseViewModel
+import com.example.usersappcompose.core.Router
 import com.example.usersappcompose.ui.entity.Contact
 import com.example.usersappcompose.ui.screens.detail.use_case.DeleteContactUseCase
 import com.example.usersappcompose.ui.screens.detail.use_case.GetDetailUserUseCase
+import com.example.usersappcompose.ui.screens.main.Screen
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 
 
 class UserDetailViewModel @AssistedInject constructor(
+    private val router: Router,
     getDetailUserUseCase: GetDetailUserUseCase,
     deleteContactUseCase: DeleteContactUseCase,
     @Assisted uuid: String,
@@ -27,6 +30,7 @@ class UserDetailViewModel @AssistedInject constructor(
 
     init {
         getUser(uuid)
+        handleEventDeletedUser()
     }
 
 
@@ -36,6 +40,13 @@ class UserDetailViewModel @AssistedInject constructor(
 
     fun deleteUser() {
         handleEvent(DetailEvent.DeleteUser)
+
+    }
+
+    private fun handleEventDeletedUser() {
+        onNavigationRequested(
+            filter = { it is DetailEvent.UserDeleted },
+            onEvent = { router.navigate(Screen.UsersContactScreen.route) })
     }
 
 

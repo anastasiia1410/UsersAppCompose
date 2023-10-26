@@ -5,6 +5,6 @@ import com.example.usersappcompose.ui.entity.Contact
 sealed class AddContactEvent {
 
     data class SaveUserToContact(val contact : Contact) : AddContactEvent()
-    object MoveToContactsScreen : AddContactEvent()
+    object UserSaved : AddContactEvent()
     data class Error(val message : String) : AddContactEvent()
 }

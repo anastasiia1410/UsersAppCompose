@@ -23,18 +23,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.example.usersappcompose.R
 import com.example.usersappcompose.ui.entity.Category
 import com.example.usersappcompose.ui.entity.Contact
-import com.example.usersappcompose.ui.screens.main.Screen
 
 @Composable
 fun AddContactScreen(
     viewModel: AddContactViewModel = hiltViewModel(),
-    navController: NavController,
 ) {
 
     val pager = viewModel.pager.collectAsLazyPagingItems()
@@ -44,7 +41,7 @@ fun AddContactScreen(
         items(pager.itemCount, pager.itemKey { it.uuid }) { index ->
             val contact = pager[index]
             contact?.also { cont ->
-                ListItem(navController, cont, onSaveContact = {
+                ListItem(cont, onSaveContact = {
                     viewModel.saveContact(cont, it)
                 })
             }
@@ -55,7 +52,6 @@ fun AddContactScreen(
 
 @Composable
 fun ListItem(
-    navController: NavController,
     contact: Contact,
     onSaveContact: (Category) -> Unit,
 ) {
@@ -75,7 +71,7 @@ fun ListItem(
             if (category != null) {
                 showDialog = false
                 onSaveContact.invoke(category)
-                navController.navigate(Screen.UsersContactScreen.route)
+
             }
         }, onCancelClick = {
             showDialog = it

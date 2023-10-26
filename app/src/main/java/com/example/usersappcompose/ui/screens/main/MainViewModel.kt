@@ -20,7 +20,7 @@ class MainViewModel @Inject constructor(private val databaseRepository: Database
         get() = _startScreenFlow.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
-    val isLoading : StateFlow<Boolean>
+    val isLoading: StateFlow<Boolean>
         get() = _isLoading
 
     init {

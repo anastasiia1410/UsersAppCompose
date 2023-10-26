@@ -25,14 +25,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.usersappcompose.R
-import com.example.usersappcompose.ui.screens.main.Screen
 
 
 @Composable
-fun UserDetailScreen(viewModel: UserDetailViewModel, navController: NavController) {
+fun UserDetailScreen(viewModel: UserDetailViewModel) {
     val state by viewModel.state.collectAsState()
     val user = state.contact
     var showDialog by remember { mutableStateOf(false) }
@@ -60,7 +58,6 @@ fun UserDetailScreen(viewModel: UserDetailViewModel, navController: NavControlle
                     confirmButton = {
                         Text(text = stringResource(id = R.string.delete), Modifier.clickable {
                             viewModel.deleteUser()
-                            navController.navigate(Screen.UsersContactScreen.route)
                             showDialog = false
                         })
 

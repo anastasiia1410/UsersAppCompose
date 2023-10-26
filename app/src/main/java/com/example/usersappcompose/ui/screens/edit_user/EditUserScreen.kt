@@ -25,15 +25,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.usersappcompose.R
-import com.example.usersappcompose.ui.screens.main.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditUserScreen(navController: NavController, viewModel: EditUserViewModel = hiltViewModel()) {
+fun EditUserScreen(viewModel: EditUserViewModel = hiltViewModel()) {
 
 
     val state by viewModel.state.collectAsState()
@@ -44,7 +42,6 @@ fun EditUserScreen(navController: NavController, viewModel: EditUserViewModel = 
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-
 
         Text(
             text = stringResource(id = R.string.edit_profile),
@@ -102,12 +99,7 @@ fun EditUserScreen(navController: NavController, viewModel: EditUserViewModel = 
         )
 
 
-        Button(onClick = {
-            viewModel.updateUser()
-            navController.navigate(Screen.UsersContactScreen.route) {
-                popUpTo(Screen.CreateUserScreen.route) { inclusive = true }
-            }
-        }, modifier = Modifier.padding(16.dp)) {
+        Button(onClick = viewModel::updateUser, modifier = Modifier.padding(16.dp)) {
             Text(
                 text = stringResource(id = R.string.update),
                 modifier = Modifier

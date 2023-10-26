@@ -27,7 +27,7 @@ class SaveCurrentUserUseCase @Inject constructor(private val databaseRepository:
             )
             try {
                 databaseRepository.insertUser(user)
-                return CreateUserEvent.None
+                return CreateUserEvent.UserSaved
             } catch (e: SQLException) {
                 return CreateUserEvent.Error("error $e")
             }

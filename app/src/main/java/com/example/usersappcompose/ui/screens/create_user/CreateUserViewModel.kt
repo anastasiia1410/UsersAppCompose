@@ -1,12 +1,18 @@
 package com.example.usersappcompose.ui.screens.create_user
 
+import androidx.navigation.navOptions
 import com.example.usersappcompose.core.BaseViewModel
+import com.example.usersappcompose.core.Router
 import com.example.usersappcompose.ui.screens.create_user.use_case.SaveCurrentUserUseCase
+import com.example.usersappcompose.ui.screens.main.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateUserViewModel @Inject constructor(saveCurrentUserUseCase: SaveCurrentUserUseCase) :
+class CreateUserViewModel @Inject constructor(
+    private val router: Router,
+    saveCurrentUserUseCase: SaveCurrentUserUseCase,
+) :
     BaseViewModel<CreateUserEvent, CreateUserSate>(
         useCases = listOf(
             saveCurrentUserUseCase
@@ -14,6 +20,10 @@ class CreateUserViewModel @Inject constructor(saveCurrentUserUseCase: SaveCurren
         reducer = CurrentUserReducer(),
         initialState = CreateUserSate("", "", "", "", "")
     ) {
+
+    init {
+        handleUserSavedEvent()
+    }
 
     fun saveCurrentUser() {
         handleEvent(CreateUserEvent.ReceiveUser)
@@ -37,5 +47,13 @@ class CreateUserViewModel @Inject constructor(saveCurrentUserUseCase: SaveCurren
 
     fun changePicture(text: String) {
         handleEvent(CreateUserEvent.SetPicture(text))
+    }
+
+    private fun handleUserSavedEvent() {
+        onNavigationRequested(filter = { it is CreateUserEvent.UserSaved }, onEvent = {
+            router.navigate(route = Screen.UsersContactScreen.route, navOptions {
+                popUpTo(Screen.CreateUserScreen.route) { inclusive = true }
+            })
+        })
     }
 }

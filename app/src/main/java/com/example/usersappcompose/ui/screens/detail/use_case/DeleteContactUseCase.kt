@@ -19,7 +19,7 @@ class DeleteContactUseCase @Inject constructor(private val databaseRepository: D
                 if(state.contact != null) {
                     databaseRepository.deleteContact(state.contact)
                 }
-                return DetailEvent.None
+                return DetailEvent.UserDeleted
             } catch (e: SQLException) {
                 return DetailEvent.Error("error $e")
             }

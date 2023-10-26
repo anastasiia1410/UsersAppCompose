@@ -5,8 +5,9 @@ import com.example.usersappcompose.data.db.DatabaseRepository
 import com.example.usersappcompose.ui.screens.add_contact.AddContactEvent
 import com.example.usersappcompose.ui.screens.add_contact.AddContactState
 import java.sql.SQLException
+import javax.inject.Inject
 
-class SaveToDbUseCase(val databaseRepository: DatabaseRepository) :
+class SaveToDbUseCase @Inject constructor(val databaseRepository: DatabaseRepository) :
     UseCase<AddContactEvent, AddContactState> {
     override fun canHandle(event: AddContactEvent): Boolean {
         return event is AddContactEvent.SaveUserToContact
@@ -16,7 +17,7 @@ class SaveToDbUseCase(val databaseRepository: DatabaseRepository) :
         return ((event) as? AddContactEvent.SaveUserToContact)?.let {
             try {
                 databaseRepository.insertContact(event.contact)
-                return AddContactEvent.MoveToContactsScreen
+                return AddContactEvent.UserSaved
 
             } catch (e: SQLException) {
                 return AddContactEvent.Error("error $e")

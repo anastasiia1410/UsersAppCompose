@@ -5,5 +5,5 @@ data class CreateUserSate(
     val lastName: String,
     val phoneNumber: String,
     val email: String,
-    val picture : String
+    val picture: String,
 )

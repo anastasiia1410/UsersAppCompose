@@ -1,13 +1,17 @@
 package com.example.usersappcompose.ui.screens.edit_user
 
+import androidx.navigation.navOptions
 import com.example.usersappcompose.core.BaseViewModel
+import com.example.usersappcompose.core.Router
 import com.example.usersappcompose.ui.screens.edit_user.use_case.GetUserUseCase
 import com.example.usersappcompose.ui.screens.edit_user.use_case.UpdateUserUseCase
+import com.example.usersappcompose.ui.screens.main.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class EditUserViewModel @Inject constructor(
+    private val router: Router,
     getUserUseCase: GetUserUseCase,
     updateUserUseCase: UpdateUserUseCase,
 ) :
@@ -23,6 +27,7 @@ class EditUserViewModel @Inject constructor(
 
     init {
         showUserInfo()
+        handleSavedUpdateUserEvent()
     }
 
     private fun showUserInfo() {
@@ -52,5 +57,13 @@ class EditUserViewModel @Inject constructor(
 
     fun changePicture(text: String) {
         handleEvent(EditEvent.ChangePicture(text))
+    }
+
+   private fun handleSavedUpdateUserEvent() {
+        onNavigationRequested({ it is EditEvent.UpdateUserSaved }, {
+            router.navigate(Screen.UsersContactScreen.route, navOptions {
+                popUpTo(Screen.CreateUserScreen.route) { inclusive = true }
+            })
+        })
     }
 }

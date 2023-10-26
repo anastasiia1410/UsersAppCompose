@@ -9,5 +9,6 @@ sealed class CreateUserEvent {
     data class SetEmail(val email: String) : CreateUserEvent()
     data class SetPicture(val picture: String) : CreateUserEvent()
     object ReceiveUser : CreateUserEvent()
+    object UserSaved : CreateUserEvent()
     data class Error(val error: String) : CreateUserEvent()
 }

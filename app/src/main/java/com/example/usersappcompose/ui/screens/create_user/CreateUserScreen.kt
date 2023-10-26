@@ -25,15 +25,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.usersappcompose.R
-import com.example.usersappcompose.ui.screens.main.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateUserScreen(
     viewModel: CreateUserViewModel = hiltViewModel(),
-    navController: NavController,
 ) {
     val state by viewModel.state.collectAsState()
     Column(
@@ -50,8 +47,7 @@ fun CreateUserScreen(
         )
 
         val launcher = rememberLauncherForActivityResult(
-            contract =
-            ActivityResultContracts.GetContent()
+            contract = ActivityResultContracts.GetContent()
         ) { uri: Uri? ->
             uri?.let {
                 viewModel.changePicture(it.toString())
@@ -103,13 +99,7 @@ fun CreateUserScreen(
             Text(text = stringResource(id = R.string.select_image))
         }
 
-        Button(onClick = {
-            viewModel.saveCurrentUser()
-            navController.navigate(Screen.UsersContactScreen.route) {
-                popUpTo(Screen.CreateUserScreen.route) { inclusive = true }
-
-            }
-        }, modifier = Modifier.padding(16.dp)) {
+        Button(onClick = viewModel::saveCurrentUser, modifier = Modifier.padding(16.dp)) {
             Text(
                 text = stringResource(id = R.string.save),
                 modifier = Modifier

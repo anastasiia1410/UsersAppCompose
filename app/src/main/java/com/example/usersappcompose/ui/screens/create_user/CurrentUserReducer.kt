@@ -12,6 +12,7 @@ class CurrentUserReducer : Reducer<CreateUserEvent, CreateUserSate> {
             is CreateUserEvent.SetPicture -> state.copy(picture = event.picture)
             is CreateUserEvent.Error -> state
             CreateUserEvent.ReceiveUser -> state
+            CreateUserEvent.UserSaved -> state
             CreateUserEvent.None -> state
         }
     }

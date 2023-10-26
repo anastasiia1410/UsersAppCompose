@@ -16,6 +16,8 @@ sealed class EditEvent {
     data class ChangeEmail(val email: String) : EditEvent()
     data class ChangePicture(val picture: String) : EditEvent()
     object SaveUpdateUser : EditEvent()
+
+    object UpdateUserSaved : EditEvent()
     data class Error(val message: String) : EditEvent()
     object None : EditEvent()
 }

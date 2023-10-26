@@ -2,6 +2,8 @@ package com.example.usersappcompose.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.usersappcompose.core.Router
+import com.example.usersappcompose.core.RouterImpl
 import com.example.usersappcompose.data.UsersPageSource
 import com.example.usersappcompose.data.db.AppDatabase
 import com.example.usersappcompose.data.db.ContactDao
@@ -17,8 +19,8 @@ import com.example.usersappcompose.ui.screens.detail.use_case.DeleteContactUseCa
 import com.example.usersappcompose.ui.screens.detail.use_case.GetDetailUserUseCase
 import com.example.usersappcompose.ui.screens.edit_user.use_case.GetUserUseCase
 import com.example.usersappcompose.ui.screens.edit_user.use_case.UpdateUserUseCase
-import com.example.usersappcompose.ui.screens.list.use_case.GetContactUseCase
 import com.example.usersappcompose.ui.screens.list.use_case.FilterAndSortContactsUseCase
+import com.example.usersappcompose.ui.screens.list.use_case.GetContactUseCase
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Binds
@@ -82,6 +84,8 @@ class DataModule {
     fun provideUsersPageSource(api: Api): UsersPageSource {
         return UsersPageSource(api)
     }
+
+
 }
 
 @InstallIn(SingletonComponent::class)
@@ -123,7 +127,7 @@ class UseCaseModule {
     }
 
     @Provides
-    fun provideSortByOptionUseCase(databaseRepository: DatabaseRepository) : FilterAndSortContactsUseCase {
+    fun provideSortByOptionUseCase(databaseRepository: DatabaseRepository): FilterAndSortContactsUseCase {
         return FilterAndSortContactsUseCase(databaseRepository)
     }
 
@@ -141,4 +145,8 @@ interface Binds {
     @Binds
     @Singleton
     fun bindNetworkRepository(impl: NetworkRepositoryImpl): NetworkRepository
+
+    @Binds
+    @Singleton
+    fun provideRouter(impl: RouterImpl): Router
 }

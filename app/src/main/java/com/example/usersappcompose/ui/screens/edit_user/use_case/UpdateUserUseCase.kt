@@ -26,7 +26,7 @@ class UpdateUserUseCase @Inject constructor(private val databaseRepository: Data
                     picture = state.picture,
                 )
                 databaseRepository.updateUserInfo(user)
-                return EditEvent.None
+                return EditEvent.UpdateUserSaved
             } catch (e: Exception) {
                 return EditEvent.Error("error $e")
             }

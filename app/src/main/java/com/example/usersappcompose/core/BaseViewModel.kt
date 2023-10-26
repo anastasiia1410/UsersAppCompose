@@ -18,10 +18,18 @@ abstract class BaseViewModel<Event, State>(
     private val _state = MutableStateFlow(initialState)
     val state: StateFlow<State>
         get() = _state.asStateFlow()
+    private val eventHandlers = mutableListOf<EventHandler<Event>>()
+
+    fun onNavigationRequested(filter: (Event) -> Boolean, onEvent: (Event) -> Unit) {
+        eventHandlers.add(EventHandler(filter, onEvent))
+    }
 
     protected fun handleEvent(event: Event) {
         val newState = reducer.reduce(event, state.value)
         _state.value = newState
+        viewModelScope.launch(Dispatchers.Main) {
+            eventHandlers.filter { it.filter(event) }.forEach { it.onEvent(event) }
+        }
         useCases.filter { it.canHandle(event) }.forEach {
             viewModelScope.launch(Dispatchers.IO) {
                 val result = it.invoke(event, newState)
@@ -30,3 +38,5 @@ abstract class BaseViewModel<Event, State>(
         }
     }
 }
+
+private class EventHandler<Event>(val filter: (Event) -> Boolean, val onEvent: (Event) -> Unit)
