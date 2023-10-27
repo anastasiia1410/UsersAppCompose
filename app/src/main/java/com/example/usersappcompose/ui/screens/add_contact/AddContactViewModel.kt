@@ -12,7 +12,6 @@ import com.example.usersappcompose.data.network.Api
 import com.example.usersappcompose.ui.entity.Category
 import com.example.usersappcompose.ui.entity.Contact
 import com.example.usersappcompose.ui.screens.add_contact.use_case.SaveToDbUseCase
-import com.example.usersappcompose.ui.screens.main.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -54,6 +53,6 @@ class AddContactViewModel @Inject constructor(
     private fun handleUserSavedEvent() {
         doOnEvent(
             { it is AddContactEvent.UserSaved },
-            { router.navigate(Screen.UsersContactScreen.route) })
+            { router.pop() })
     }
 }

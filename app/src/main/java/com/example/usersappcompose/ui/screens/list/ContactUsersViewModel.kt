@@ -34,10 +34,6 @@ class ContactUsersViewModel @Inject constructor(
 
     val uuid = MutableStateFlow("")
 
-    init {
-        getContacts()
-    }
-
     fun getContacts() {
         handleEvent(ContactsEvent.GetContacts)
     }

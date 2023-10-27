@@ -35,6 +35,7 @@ fun AddContactScreen(
 ) {
 
     val pager = viewModel.pager.collectAsLazyPagingItems()
+
     LazyColumn(
         contentPadding = PaddingValues(16.dp)
     ) {
