@@ -25,13 +25,7 @@ class ContactsReducer : Reducer<ContactsEvent, ContactsState> {
                 contacts = event.contacts
             )
 
-            is ContactsEvent.ClickOnUser -> state.copy(uuid = event.uuid)
             ContactsEvent.GetContacts -> state
-            ContactsEvent.ClickToAddFAB -> state
-            ContactsEvent.ClickToEditUserFAB -> state
-            ContactsEvent.MoveToAddContactScreen -> state
-            ContactsEvent.MoveToEditUserScreen -> state
-            ContactsEvent.RoutedReceived -> state
         }
     }
 }

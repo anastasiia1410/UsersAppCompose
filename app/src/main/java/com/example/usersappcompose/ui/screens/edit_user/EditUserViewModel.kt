@@ -55,12 +55,8 @@ class EditUserViewModel @Inject constructor(
         handleEvent(EditEvent.ChangeEmail(text))
     }
 
-    fun changePicture(text: String) {
-        handleEvent(EditEvent.ChangePicture(text))
-    }
-
    private fun handleSavedUpdateUserEvent() {
-        onNavigationRequested({ it is EditEvent.UpdateUserSaved }, {
+        doOnEvent({ it is EditEvent.UpdateUserSaved }, {
             router.navigate(Screen.UsersContactScreen.route, navOptions {
                 popUpTo(Screen.CreateUserScreen.route) { inclusive = true }
             })

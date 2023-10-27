@@ -52,7 +52,7 @@ class AddContactViewModel @Inject constructor(
     }
 
     private fun handleUserSavedEvent() {
-        onNavigationRequested(
+        doOnEvent(
             { it is AddContactEvent.UserSaved },
             { router.navigate(Screen.UsersContactScreen.route) })
     }

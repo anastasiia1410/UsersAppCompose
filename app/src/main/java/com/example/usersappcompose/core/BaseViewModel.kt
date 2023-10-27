@@ -20,7 +20,7 @@ abstract class BaseViewModel<Event, State>(
         get() = _state.asStateFlow()
     private val eventHandlers = mutableListOf<EventHandler<Event>>()
 
-    fun onNavigationRequested(filter: (Event) -> Boolean, onEvent: (Event) -> Unit) {
+    fun doOnEvent(filter: (Event) -> Boolean, onEvent: (Event) -> Unit) {
         eventHandlers.add(EventHandler(filter, onEvent))
     }
 

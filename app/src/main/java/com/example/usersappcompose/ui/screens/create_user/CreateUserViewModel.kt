@@ -50,7 +50,7 @@ class CreateUserViewModel @Inject constructor(
     }
 
     private fun handleUserSavedEvent() {
-        onNavigationRequested(filter = { it is CreateUserEvent.UserSaved }, onEvent = {
+        doOnEvent(filter = { it is CreateUserEvent.UserSaved }, onEvent = {
             router.navigate(route = Screen.UsersContactScreen.route, navOptions {
                 popUpTo(Screen.CreateUserScreen.route) { inclusive = true }
             })

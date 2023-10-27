@@ -7,7 +7,6 @@ import com.example.usersappcompose.core.Router
 import com.example.usersappcompose.ui.entity.Contact
 import com.example.usersappcompose.ui.screens.detail.use_case.DeleteContactUseCase
 import com.example.usersappcompose.ui.screens.detail.use_case.GetDetailUserUseCase
-import com.example.usersappcompose.ui.screens.main.Screen
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -44,9 +43,9 @@ class UserDetailViewModel @AssistedInject constructor(
     }
 
     private fun handleEventDeletedUser() {
-        onNavigationRequested(
+        doOnEvent(
             filter = { it is DetailEvent.UserDeleted },
-            onEvent = { router.navigate(Screen.UsersContactScreen.route) })
+            onEvent = { router.pop() })
     }
 
 

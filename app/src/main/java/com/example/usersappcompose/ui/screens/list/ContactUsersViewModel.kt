@@ -5,9 +5,6 @@ import com.example.usersappcompose.core.Router
 import com.example.usersappcompose.ui.entity.Category
 import com.example.usersappcompose.ui.screens.list.use_case.FilterAndSortContactsUseCase
 import com.example.usersappcompose.ui.screens.list.use_case.GetContactUseCase
-import com.example.usersappcompose.ui.screens.list.use_case.MoveToAddContactScreenUseCase
-import com.example.usersappcompose.ui.screens.list.use_case.MoveToDetailUserScreenUseCase
-import com.example.usersappcompose.ui.screens.list.use_case.MoveToEditUserScreenUseCase
 import com.example.usersappcompose.ui.screens.main.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,9 +20,6 @@ class ContactUsersViewModel @Inject constructor(
         useCases = listOf(
             getContactUseCase,
             filterAndSortContactsUseCase,
-            MoveToAddContactScreenUseCase(),
-            MoveToEditUserScreenUseCase(),
-            MoveToDetailUserScreenUseCase()
         ),
         reducer = ContactsReducer(),
         initialState = ContactsState(
@@ -42,12 +36,9 @@ class ContactUsersViewModel @Inject constructor(
 
     init {
         getContacts()
-        handleMovingToAddContactScreen()
-        handleMovingToEditUserScreen()
-        handleMovingToDetailUserScreen()
     }
 
-    private fun getContacts() {
+    fun getContacts() {
         handleEvent(ContactsEvent.GetContacts)
     }
 
@@ -65,32 +56,14 @@ class ContactUsersViewModel @Inject constructor(
     }
 
     fun moveToAddContactScreen() {
-        handleEvent(ContactsEvent.ClickToAddFAB)
+        router.navigate(Screen.AddContactScreen.route)
     }
 
     fun moveToEditUserScreen() {
-        handleEvent(ContactsEvent.ClickToEditUserFAB)
+        router.navigate(Screen.EditUserScreen.route)
     }
 
     fun moveToDetailUserScreen(uuid: String) {
-        handleEvent(ContactsEvent.ClickOnUser(uuid))
-    }
-
-    private fun handleMovingToAddContactScreen() {
-        onNavigationRequested(
-            { it is ContactsEvent.MoveToAddContactScreen },
-            { router.navigate(Screen.AddContactScreen.route) })
-    }
-
-    private fun handleMovingToEditUserScreen() {
-        onNavigationRequested(
-            { it is ContactsEvent.MoveToEditUserScreen },
-            { router.navigate(Screen.EditUserScreen.route) })
-    }
-
-    private fun handleMovingToDetailUserScreen() {
-        onNavigationRequested(
-            { it is ContactsEvent.RoutedReceived },
-            { router.navigate(Screen.UserDetailScreen.route + "/${state.value.uuid}") })
+        router.navigate(Screen.UserDetailScreen.route + "/${uuid}")
     }
 }
