@@ -43,8 +43,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.usersappcompose.R
-import com.example.usersappcompose.ui.entity.Category
-import com.example.usersappcompose.ui.entity.Contact
+import com.example.domain.entity.Category
+import com.example.domain.entity.Contact
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

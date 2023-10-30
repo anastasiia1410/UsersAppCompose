@@ -2,11 +2,11 @@ package com.example.usersappcompose.ui.screens.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.domain.entity.Contact
+import com.example.domain.use_cases.detail_user_use_case.DetailEvent
+import com.example.domain.use_cases.detail_user_use_case.DetailState
 import com.example.usersappcompose.core.BaseViewModel
 import com.example.usersappcompose.core.Router
-import com.example.usersappcompose.ui.entity.Contact
-import com.example.usersappcompose.ui.screens.detail.use_case.DeleteContactUseCase
-import com.example.usersappcompose.ui.screens.detail.use_case.GetDetailUserUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -14,8 +14,8 @@ import dagger.assisted.AssistedInject
 
 class UserDetailViewModel @AssistedInject constructor(
     private val router: Router,
-    getDetailUserUseCase: GetDetailUserUseCase,
-    deleteContactUseCase: DeleteContactUseCase,
+    getDetailUserUseCase: com.example.domain.use_cases.detail_user_use_case.GetDetailUserUseCase,
+    deleteContactUseCase: com.example.domain.use_cases.detail_user_use_case.DeleteContactUseCase,
     @Assisted uuid: String,
 ) :
     BaseViewModel<DetailEvent, DetailState>(
@@ -23,7 +23,7 @@ class UserDetailViewModel @AssistedInject constructor(
             getDetailUserUseCase,
             deleteContactUseCase
         ),
-        reducer = DetailReducer(),
+        reducer = com.example.domain.use_cases.detail_user_use_case.DetailReducer(),
         initialState = Contact.initialUser()
     ) {
 

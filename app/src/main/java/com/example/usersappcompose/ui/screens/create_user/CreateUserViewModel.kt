@@ -1,9 +1,10 @@
 package com.example.usersappcompose.ui.screens.create_user
 
 import androidx.navigation.navOptions
+import com.example.domain.use_cases.create_user_use_case.CreateUserEvent
+import com.example.domain.use_cases.create_user_use_case.CreateUserSate
 import com.example.usersappcompose.core.BaseViewModel
 import com.example.usersappcompose.core.Router
-import com.example.usersappcompose.ui.screens.create_user.use_case.SaveCurrentUserUseCase
 import com.example.usersappcompose.ui.screens.main.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -11,14 +12,20 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateUserViewModel @Inject constructor(
     private val router: Router,
-    saveCurrentUserUseCase: SaveCurrentUserUseCase,
+    saveCurrentUserUseCase: com.example.domain.use_cases.create_user_use_case.SaveCurrentUserUseCase,
 ) :
     BaseViewModel<CreateUserEvent, CreateUserSate>(
         useCases = listOf(
             saveCurrentUserUseCase
         ),
-        reducer = CurrentUserReducer(),
-        initialState = CreateUserSate("", "", "", "", "")
+        reducer = com.example.domain.use_cases.create_user_use_case.CurrentUserReducer(),
+        initialState = CreateUserSate(
+            "",
+            "",
+            "",
+            "",
+            ""
+        )
     ) {
 
     init {
@@ -50,10 +57,12 @@ class CreateUserViewModel @Inject constructor(
     }
 
     private fun handleUserSavedEvent() {
-        doOnEvent(filter = { it is CreateUserEvent.UserSaved }, onEvent = {
-            router.navigate(route = Screen.UsersContactScreen.route, navOptions {
-                popUpTo(Screen.CreateUserScreen.route) { inclusive = true }
+        doOnEvent(
+            filter = { it is CreateUserEvent.UserSaved },
+            onEvent = {
+                router.navigate(route = Screen.UsersContactScreen.route, navOptions {
+                    popUpTo(Screen.CreateUserScreen.route) { inclusive = true }
+                })
             })
-        })
     }
 }

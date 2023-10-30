@@ -26,8 +26,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.example.usersappcompose.R
-import com.example.usersappcompose.ui.entity.Category
-import com.example.usersappcompose.ui.entity.Contact
+import com.example.domain.entity.Category
+import com.example.domain.entity.Contact
 
 @Composable
 fun AddContactScreen(

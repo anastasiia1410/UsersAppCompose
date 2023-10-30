@@ -1,10 +1,13 @@
 package com.example.usersappcompose.ui.screens.edit_user
 
 import androidx.navigation.navOptions
+import com.example.domain.use_cases.edit_user_use_case.EditEvent
+import com.example.domain.use_cases.edit_user_use_case.EditReducer
+import com.example.domain.use_cases.edit_user_use_case.EditState
+import com.example.domain.use_cases.edit_user_use_case.GetUserUseCase
+import com.example.domain.use_cases.edit_user_use_case.UpdateUserUseCase
 import com.example.usersappcompose.core.BaseViewModel
 import com.example.usersappcompose.core.Router
-import com.example.usersappcompose.ui.screens.edit_user.use_case.GetUserUseCase
-import com.example.usersappcompose.ui.screens.edit_user.use_case.UpdateUserUseCase
 import com.example.usersappcompose.ui.screens.main.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

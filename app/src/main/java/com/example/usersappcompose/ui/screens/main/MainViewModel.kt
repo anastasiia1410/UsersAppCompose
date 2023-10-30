@@ -2,7 +2,7 @@ package com.example.usersappcompose.ui.screens.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.usersappcompose.data.db.DatabaseRepository
+import com.example.domain.repository.db_repository.DatabaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

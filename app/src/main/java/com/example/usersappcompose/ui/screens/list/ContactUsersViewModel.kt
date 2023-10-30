@@ -1,13 +1,15 @@
 package com.example.usersappcompose.ui.screens.list
 
+import com.example.domain.entity.Category
+import com.example.domain.use_cases.contact_list_use_case.ContactsEvent
+import com.example.domain.use_cases.contact_list_use_case.ContactsReducer
+import com.example.domain.use_cases.contact_list_use_case.ContactsState
+import com.example.domain.use_cases.contact_list_use_case.FilterAndSortContactsUseCase
+import com.example.domain.use_cases.contact_list_use_case.GetContactUseCase
 import com.example.usersappcompose.core.BaseViewModel
 import com.example.usersappcompose.core.Router
-import com.example.usersappcompose.ui.entity.Category
-import com.example.usersappcompose.ui.screens.list.use_case.FilterAndSortContactsUseCase
-import com.example.usersappcompose.ui.screens.list.use_case.GetContactUseCase
 import com.example.usersappcompose.ui.screens.main.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,8 +33,6 @@ class ContactUsersViewModel @Inject constructor(
             uuid = ""
         )
     ) {
-
-    val uuid = MutableStateFlow("")
 
     fun getContacts() {
         handleEvent(ContactsEvent.GetContacts)

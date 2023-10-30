@@ -2,6 +2,9 @@ package com.example.usersappcompose.core
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.EventHandler
+import com.example.core.Reducer
+import com.example.core.UseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,5 +41,3 @@ abstract class BaseViewModel<Event, State>(
         }
     }
 }
-
-private class EventHandler<Event>(val filter: (Event) -> Boolean, val onEvent: (Event) -> Unit)
