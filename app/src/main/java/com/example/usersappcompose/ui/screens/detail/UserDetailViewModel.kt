@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.domain.entity.Contact
 import com.example.domain.use_cases.detail_user_use_case.DetailEvent
+import com.example.domain.use_cases.detail_user_use_case.DetailReducer
 import com.example.domain.use_cases.detail_user_use_case.DetailState
 import com.example.usersappcompose.core.BaseViewModel
 import com.example.usersappcompose.core.Router
@@ -23,7 +24,7 @@ class UserDetailViewModel @AssistedInject constructor(
             getDetailUserUseCase,
             deleteContactUseCase
         ),
-        reducer = com.example.domain.use_cases.detail_user_use_case.DetailReducer(),
+        reducer = DetailReducer(),
         initialState = Contact.initialUser()
     ) {
 

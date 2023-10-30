@@ -13,7 +13,6 @@ interface DatabaseRepository {
     suspend fun getContacts(): List<Contact>
     suspend fun getContactById(uuid: String): Contact?
     suspend fun getContactsByData(category: Category): List<Contact>
-
     suspend fun deleteContact(contact: Contact)
 
 }
