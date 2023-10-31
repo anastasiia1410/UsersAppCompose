@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,9 +26,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.example.usersappcompose.R
 import com.example.domain.entity.Category
 import com.example.domain.entity.Contact
+import com.example.usersappcompose.R
 
 @Composable
 fun AddContactScreen(
@@ -42,7 +43,7 @@ fun AddContactScreen(
         items(pager.itemCount, pager.itemKey { it.uuid }) { index ->
             val contact = pager[index]
             contact?.also { cont ->
-                ListItem(cont, onSaveContact = {
+                ListItem(StableHolder(cont), onSaveContact = {
                     viewModel.saveContact(cont, it)
                 })
             }
@@ -53,7 +54,7 @@ fun AddContactScreen(
 
 @Composable
 fun ListItem(
-    contact: Contact,
+    contact: StableHolder<Contact>,
     onSaveContact: (Category) -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
@@ -62,7 +63,7 @@ fun ListItem(
             showDialog = true
         }) {
         Text(
-            text = contact.firstName,
+            text = contact.component().firstName,
             style = MaterialTheme.typography.headlineMedium
                 .copy(fontWeight = FontWeight.ExtraBold)
         )
@@ -128,6 +129,12 @@ fun CategoryRow(label: String, selectedCategory: MutableState<Category?>, catego
         )
         Text(text = label, fontSize = 20.sp, modifier = Modifier.padding(8.dp))
     }
+}
+
+
+@Stable
+class StableHolder<T>(private val item: T) {
+    fun component(): T = item
 }
 
 

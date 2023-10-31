@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,9 +43,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.usersappcompose.R
 import com.example.domain.entity.Category
 import com.example.domain.entity.Contact
+import com.example.usersappcompose.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,7 +63,7 @@ fun UsersListScreen(
         Row(modifier = Modifier.fillMaxWidth()) {
             SortingMenu(
                 onSortingOptionSelected = viewModel::sortedList,
-                dropDownMenuItem = DropDownMenuItem.menuList(),
+                dropDownMenuItem = StableHolder(DropDownMenuItem.menuList()),
             )
             TextField(
                 value = state.searchQuery,
@@ -86,7 +87,7 @@ fun UsersListScreen(
                 ) {
                     items(items = state.contacts) { user ->
                         ListItem(
-                            contact = user,
+                            contact = StableHolder(user),
                             onUserClick = { viewModel.moveToDetailUserScreen(it) }
                         )
                     }
@@ -116,15 +117,17 @@ fun UsersListScreen(
 }
 
 @Composable
-fun ListItem(contact: Contact, onUserClick: ((uuid: String) -> Unit)) {
+fun ListItem(
+    contact: StableHolder<Contact>,
+    onUserClick: ((uuid: String) -> Unit)) {
 
     Row(modifier = Modifier
         .padding(4.dp)
         .clickable {
-            onUserClick.invoke(contact.uuid)
+            onUserClick.invoke(contact.component().uuid)
         }) {
         Text(
-            text = contact.firstName,
+            text = contact.component().firstName,
             style = MaterialTheme.typography.headlineMedium
                 .copy(fontWeight = FontWeight.Black)
         )
@@ -168,7 +171,7 @@ fun AddContactButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 fun SortingMenu(
-    dropDownMenuItem: List<DropDownMenuItem>,
+    dropDownMenuItem: StableHolder<List<DropDownMenuItem>>,
     onSortingOptionSelected: (Category) -> Unit,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -190,7 +193,7 @@ fun SortingMenu(
         expanded = expanded,
         onDismissRequest = { expanded = false }
     ) {
-        dropDownMenuItem.forEach { item ->
+        dropDownMenuItem.component().forEach { item ->
             DropdownMenuItem(
                 text = { Text(text = item.category.name) },
                 onClick = {
@@ -199,6 +202,11 @@ fun SortingMenu(
                 })
         }
     }
+}
+
+@Stable
+class StableHolder<T>(private val item: T) {
+    fun component(): T = item
 }
 
 data class DropDownMenuItem(val category: Category) {

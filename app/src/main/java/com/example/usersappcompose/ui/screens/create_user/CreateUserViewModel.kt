@@ -37,12 +37,11 @@ class CreateUserViewModel @Inject constructor(
         )
     ) {
 
-
     val uiState: StateFlow<CreateUserUiState>
         get() = _state.map { it.toUiState() }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
+                started = SharingStarted.WhileSubscribed(1000),
                 initialValue = CreateUserUiState("", "", "", "", "")
             )
 

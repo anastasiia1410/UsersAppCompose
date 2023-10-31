@@ -40,6 +40,7 @@ class ContactUsersViewModel @Inject constructor(
         )
     ) {
 
+
     val uiState = _state.map { it.toUiState() }
         .stateIn(
             scope = viewModelScope,
@@ -53,6 +54,7 @@ class ContactUsersViewModel @Inject constructor(
                 uuid = ""
             )
         )
+
 
     fun getContacts() {
         handleEvent(ContactsEvent.GetContacts)

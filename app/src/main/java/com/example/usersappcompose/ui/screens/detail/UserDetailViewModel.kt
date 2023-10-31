@@ -36,15 +36,12 @@ class UserDetailViewModel @AssistedInject constructor(
         reducer = DetailReducer(),
         initialState = Contact.initialContact()
     ) {
-    val uiState: StateFlow<DetailUiState>
-        get() = _state.map { it.toUiState() }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(1000),
-                initialValue = DetailUiState.initialContactUi()
 
-            )
-
+    val uiState: StateFlow<DetailUiState> = _state.map { it.toUiState() }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(1000),
+        initialValue = DetailUiState.initialContactUi()
+    )
 
     init {
         getUser(uuid)
