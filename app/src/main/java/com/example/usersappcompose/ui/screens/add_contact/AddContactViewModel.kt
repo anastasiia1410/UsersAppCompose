@@ -9,9 +9,9 @@ import com.example.data.network.Api.Companion.DEFAULT_PAGE_SIZE
 import com.example.data.page_source.UsersPageSource
 import com.example.domain.entity.Category
 import com.example.domain.entity.Contact
-import com.example.domain.use_cases.add_contact_use_case.AddContactEvent
-import com.example.domain.use_cases.add_contact_use_case.AddContactState
-import com.example.domain.use_cases.add_contact_use_case.SaveToDbUseCase
+import com.example.domain.use_cases.add_contact.AddContactEvent
+import com.example.domain.use_cases.add_contact.AddContactState
+import com.example.domain.use_cases.add_contact.use_case.SaveToDbUseCase
 import com.example.usersappcompose.core.BaseViewModel
 import com.example.usersappcompose.core.Router
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +28,7 @@ class AddContactViewModel @Inject constructor(
 ) :
     BaseViewModel<AddContactEvent, AddContactState>(
         useCases = listOf(saveToDbUseCase),
-        reducer = com.example.domain.use_cases.add_contact_use_case.AddContactReducer(),
+        reducer = com.example.domain.use_cases.add_contact.AddContactReducer(),
         initialState = AddContactState(category = Category.ALL)
     ) {
 

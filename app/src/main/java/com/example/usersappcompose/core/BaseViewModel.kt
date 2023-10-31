@@ -18,11 +18,11 @@ abstract class BaseViewModel<Event, State>(
 ) : ViewModel() {
 
 
-    private val _state = MutableStateFlow(initialState)
+    val _state = MutableStateFlow(initialState)
     val state: StateFlow<State>
         get() = _state.asStateFlow()
-    private val eventHandlers = mutableListOf<EventHandler<Event>>()
 
+    private val eventHandlers = mutableListOf<EventHandler<Event>>()
     fun doOnEvent(filter: (Event) -> Boolean, onEvent: (Event) -> Unit) {
         eventHandlers.add(EventHandler(filter, onEvent))
     }

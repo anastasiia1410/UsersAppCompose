@@ -7,10 +7,10 @@ import com.example.data.db.ContactDao
 import com.example.data.db.DatabaseRepositoryImpl
 import com.example.data.db.UserDao
 import com.example.data.network.Api
-import com.example.data.network.NetworkManagerImpl
+import com.example.data.network.NetworkRepositoryImpl
 import com.example.data.page_source.UsersPageSource
 import com.example.domain.repository.db_repository.DatabaseRepository
-import com.example.domain.repository.network_repository.NetworkManager
+import com.example.domain.repository.network_repository.NetworkRepository
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Binds
@@ -90,5 +90,5 @@ interface Binds {
 
     @Binds
     @Singleton
-    fun bindNetworkRepository(impl: NetworkManagerImpl): NetworkManager
+    fun bindNetworkRepository(impl: NetworkRepositoryImpl): NetworkRepository
 }

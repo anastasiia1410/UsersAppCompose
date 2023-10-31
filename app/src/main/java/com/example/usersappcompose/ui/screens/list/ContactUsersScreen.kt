@@ -52,7 +52,7 @@ fun UsersListScreen(
     viewModel: ContactUsersViewModel = hiltViewModel(),
 ) {
 
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.uiState.collectAsState()
 
     LaunchedEffect(key1 = "contacts", block = {
         viewModel.getContacts()

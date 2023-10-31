@@ -1,5 +1,7 @@
 package com.example.domain.entity
 
+import com.example.domain.use_cases.detail_user.DetailState
+
 data class Contact(
     val firstName: String,
     val lastName: String,
@@ -17,8 +19,8 @@ data class Contact(
     }
 
     companion object {
-        fun initialUser(): com.example.domain.use_cases.detail_user_use_case.DetailState {
-            return com.example.domain.use_cases.detail_user_use_case.DetailState(null)
+        fun initialContact(): DetailState {
+            return DetailState(null)
         }
     }
 }

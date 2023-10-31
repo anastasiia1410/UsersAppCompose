@@ -34,7 +34,7 @@ import com.example.usersappcompose.R
 fun EditUserScreen(viewModel: EditUserViewModel = hiltViewModel()) {
 
 
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.uiState.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()

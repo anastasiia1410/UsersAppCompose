@@ -1,15 +1,21 @@
 package com.example.usersappcompose.ui.screens.list
 
+import androidx.lifecycle.viewModelScope
 import com.example.domain.entity.Category
-import com.example.domain.use_cases.contact_list_use_case.ContactsEvent
-import com.example.domain.use_cases.contact_list_use_case.ContactsReducer
-import com.example.domain.use_cases.contact_list_use_case.ContactsState
-import com.example.domain.use_cases.contact_list_use_case.FilterAndSortContactsUseCase
-import com.example.domain.use_cases.contact_list_use_case.GetContactUseCase
+import com.example.domain.use_cases.contact_list.ContactsEvent
+import com.example.domain.use_cases.contact_list.ContactsReducer
+import com.example.domain.use_cases.contact_list.ContactsState
+import com.example.domain.use_cases.contact_list.use_cases.FilterAndSortContactsUseCase
+import com.example.domain.use_cases.contact_list.use_cases.GetContactUseCase
 import com.example.usersappcompose.core.BaseViewModel
 import com.example.usersappcompose.core.Router
+import com.example.usersappcompose.ui.screens.list.ui_state.ContactsUiState
+import com.example.usersappcompose.ui.screens.list.ui_state.toUiState
 import com.example.usersappcompose.ui.screens.main.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,6 +39,20 @@ class ContactUsersViewModel @Inject constructor(
             uuid = ""
         )
     ) {
+
+    val uiState = _state.map { it.toUiState() }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(2000),
+            initialValue = ContactsUiState(
+                contacts = emptyList(),
+                sortingOption = Category.ALL,
+                searchQuery = "",
+                isSearching = false,
+                isSorting = false,
+                uuid = ""
+            )
+        )
 
     fun getContacts() {
         handleEvent(ContactsEvent.GetContacts)

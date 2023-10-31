@@ -31,8 +31,8 @@ import com.example.usersappcompose.R
 
 @Composable
 fun UserDetailScreen(viewModel: UserDetailViewModel) {
-    val state by viewModel.state.collectAsState()
-    val user = state.contact
+    val state by viewModel.uiState.collectAsState()
+    val user = state.uiContact
     var showDialog by remember { mutableStateOf(false) }
     if (user != null) {
         Column(

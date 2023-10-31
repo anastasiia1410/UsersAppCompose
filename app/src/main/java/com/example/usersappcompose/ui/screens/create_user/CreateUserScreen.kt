@@ -32,7 +32,7 @@ import com.example.usersappcompose.R
 fun CreateUserScreen(
     viewModel: CreateUserViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.uiState.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
