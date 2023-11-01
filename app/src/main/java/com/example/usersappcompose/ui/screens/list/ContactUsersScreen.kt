@@ -43,8 +43,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.domain.entity.Category
-import com.example.domain.entity.Contact
 import com.example.usersappcompose.R
+import com.example.usersappcompose.ui.ui_models.ContactUiModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -117,7 +119,7 @@ fun UsersListScreen(
 
 @Composable
 fun ListItem(
-    contact: Contact,
+    contact: ContactUiModel,
     onUserClick: ((uuid: String) -> Unit),
 ) {
 
@@ -171,7 +173,7 @@ fun AddContactButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 fun SortingMenu(
-    dropDownMenuItem: List<DropDownMenuItem>,
+    dropDownMenuItem: ImmutableList<DropDownMenuItem>,
     onSortingOptionSelected: (Category) -> Unit,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -206,13 +208,13 @@ fun SortingMenu(
 
 data class DropDownMenuItem(val category: Category) {
     companion object {
-        fun menuList(): List<DropDownMenuItem> {
+        fun menuList(): ImmutableList<DropDownMenuItem> {
             return listOf(
                 DropDownMenuItem(Category.ALL),
                 DropDownMenuItem(Category.FAMILY),
                 DropDownMenuItem(Category.FRIENDS),
                 DropDownMenuItem(Category.WORK)
-            )
+            ).toImmutableList()
         }
     }
 }

@@ -26,8 +26,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.example.domain.entity.Category
-import com.example.domain.entity.Contact
 import com.example.usersappcompose.R
+import com.example.usersappcompose.ui.ui_models.ContactUiModel
+import com.example.usersappcompose.ui.ui_models.toContactUiModel
 
 @Composable
 fun AddContactScreen(
@@ -42,7 +43,7 @@ fun AddContactScreen(
         items(pager.itemCount, pager.itemKey { it.uuid }) { index ->
             val contact = pager[index]
             contact?.also { cont ->
-                ListItem(cont, onSaveContact = {
+                ListItem(cont.toContactUiModel(), onSaveContact = {
                     viewModel.saveContact(cont, it)
                 })
             }
@@ -53,7 +54,7 @@ fun AddContactScreen(
 
 @Composable
 fun ListItem(
-    contact: Contact,
+    contact: ContactUiModel,
     onSaveContact: (Category) -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
