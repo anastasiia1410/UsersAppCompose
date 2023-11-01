@@ -12,8 +12,19 @@ data class ContactUiModel(
     val category: Category,
 )
 
-fun Contact.toContactUiModel() : ContactUiModel{
+fun Contact.toContactUiModel(): ContactUiModel {
     return ContactUiModel(
+        firstName = firstName,
+        lastName = lastName,
+        email = email,
+        uuid = uuid,
+        picture = picture,
+        category = category
+    )
+}
+
+fun ContactUiModel.toContact(): Contact {
+    return Contact(
         firstName = firstName,
         lastName = lastName,
         email = email,

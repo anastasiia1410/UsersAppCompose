@@ -28,7 +28,6 @@ import androidx.paging.compose.itemKey
 import com.example.domain.entity.Category
 import com.example.usersappcompose.R
 import com.example.usersappcompose.ui.ui_models.ContactUiModel
-import com.example.usersappcompose.ui.ui_models.toContactUiModel
 
 @Composable
 fun AddContactScreen(
@@ -43,7 +42,7 @@ fun AddContactScreen(
         items(pager.itemCount, pager.itemKey { it.uuid }) { index ->
             val contact = pager[index]
             contact?.also { cont ->
-                ListItem(cont.toContactUiModel(), onSaveContact = {
+                ListItem(cont, onSaveContact = {
                     viewModel.saveContact(cont, it)
                 })
             }
