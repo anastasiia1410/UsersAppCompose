@@ -31,7 +31,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,7 +62,7 @@ fun UsersListScreen(
         Row(modifier = Modifier.fillMaxWidth()) {
             SortingMenu(
                 onSortingOptionSelected = viewModel::sortedList,
-                dropDownMenuItem = StableHolder(DropDownMenuItem.menuList()),
+                dropDownMenuItem = DropDownMenuItem.menuList(),
             )
             TextField(
                 value = state.searchQuery,
@@ -87,7 +86,7 @@ fun UsersListScreen(
                 ) {
                     items(items = state.contacts) { user ->
                         ListItem(
-                            contact = StableHolder(user),
+                            contact = user,
                             onUserClick = { viewModel.moveToDetailUserScreen(it) }
                         )
                     }
@@ -118,16 +117,17 @@ fun UsersListScreen(
 
 @Composable
 fun ListItem(
-    contact: StableHolder<Contact>,
-    onUserClick: ((uuid: String) -> Unit)) {
+    contact: Contact,
+    onUserClick: ((uuid: String) -> Unit),
+) {
 
     Row(modifier = Modifier
         .padding(4.dp)
         .clickable {
-            onUserClick.invoke(contact.component().uuid)
+            onUserClick.invoke(contact.uuid)
         }) {
         Text(
-            text = contact.component().firstName,
+            text = contact.firstName,
             style = MaterialTheme.typography.headlineMedium
                 .copy(fontWeight = FontWeight.Black)
         )
@@ -171,7 +171,7 @@ fun AddContactButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 fun SortingMenu(
-    dropDownMenuItem: StableHolder<List<DropDownMenuItem>>,
+    dropDownMenuItem: List<DropDownMenuItem>,
     onSortingOptionSelected: (Category) -> Unit,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -193,7 +193,7 @@ fun SortingMenu(
         expanded = expanded,
         onDismissRequest = { expanded = false }
     ) {
-        dropDownMenuItem.component().forEach { item ->
+        dropDownMenuItem.forEach { item ->
             DropdownMenuItem(
                 text = { Text(text = item.category.name) },
                 onClick = {
@@ -202,11 +202,6 @@ fun SortingMenu(
                 })
         }
     }
-}
-
-@Stable
-class StableHolder<T>(private val item: T) {
-    fun component(): T = item
 }
 
 data class DropDownMenuItem(val category: Category) {

@@ -12,7 +12,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,7 +42,7 @@ fun AddContactScreen(
         items(pager.itemCount, pager.itemKey { it.uuid }) { index ->
             val contact = pager[index]
             contact?.also { cont ->
-                ListItem(StableHolder(cont), onSaveContact = {
+                ListItem(cont, onSaveContact = {
                     viewModel.saveContact(cont, it)
                 })
             }
@@ -54,7 +53,7 @@ fun AddContactScreen(
 
 @Composable
 fun ListItem(
-    contact: StableHolder<Contact>,
+    contact: Contact,
     onSaveContact: (Category) -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
@@ -63,7 +62,7 @@ fun ListItem(
             showDialog = true
         }) {
         Text(
-            text = contact.component().firstName,
+            text = contact.firstName,
             style = MaterialTheme.typography.headlineMedium
                 .copy(fontWeight = FontWeight.ExtraBold)
         )
@@ -129,12 +128,6 @@ fun CategoryRow(label: String, selectedCategory: MutableState<Category?>, catego
         )
         Text(text = label, fontSize = 20.sp, modifier = Modifier.padding(8.dp))
     }
-}
-
-
-@Stable
-class StableHolder<T>(private val item: T) {
-    fun component(): T = item
 }
 
 
