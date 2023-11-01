@@ -12,9 +12,8 @@ import com.example.usersappcompose.core.Router
 import com.example.usersappcompose.ui.screens.list.ui_state.ContactsUiState
 import com.example.usersappcompose.ui.screens.list.ui_state.toUiState
 import com.example.usersappcompose.ui.screens.main.Screen
-import com.example.usersappcompose.ui.ui_models.ContactUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -48,7 +47,7 @@ class ContactUsersViewModel @Inject constructor(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(2000),
             initialValue = ContactsUiState(
-                contacts = listOf<ContactUiModel>().toImmutableList(),
+                contacts = persistentListOf(),
                 sortingOption = Category.ALL,
                 searchQuery = "",
                 isSearching = false,
